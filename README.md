@@ -9,4 +9,3 @@ A high tech IOT blinky toy consisting of
 
 
 Details here: https://metalab.at/wiki/Blinkenpoi
-# blinkenpoi
