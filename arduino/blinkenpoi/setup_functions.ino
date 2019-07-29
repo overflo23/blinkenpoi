@@ -5,24 +5,127 @@ uint32_t starttime=0;
 void startWiFi() { // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
 
 
-  if(open_accesspoint)
-  {
-   displayLoadingPixel(0,255,0,0); 
+
+    //WiFiManager
+    //Local intialization. Once its business is done, there is no need to keep it around
+
+    WiFiManager wifiManager;
+
+
+    
+    if(reset_config)
+    {
+        Serial.println("wifiManager.resetSettings()");
+        wifiManager.resetSettings();
+        //TODO delete config.json here
+
+        for(int i=0;i<3;i++)
+        {
+         displayLoadingPixel(0,255,0,0);
+         delay(200);
+         displayLoadingPixel(0,0,0,0);
+         delay(200);
+        }
+        
+        ESP.reset();
+        delay(5000);
+    }
+
+  
+  // displayLoadingPixel(0,255,0,0); 
+  // delay(1000);
+
+    WiFiManagerParameter custom_stick_name("stickname", "Stick Label", stick_name, 20);
+
+    //set config save notify callback
+    wifiManager.setSaveConfigCallback(saveConfigCallback);
+
+    wifiManager.setAPCallback(configModeCallback);
+    wifiManager.addParameter(&custom_stick_name);
+
+  //set static ip
+  //wifiManager.setSTAStaticIPConfig(IPAddress(10,0,1,99), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
+
+
+    //wifiManager.setAPCallback( testcallback );
+    //  
+
+   if(animation_running)
+   {
+    Serial.println("Button shortpressed, no network config now.");
+/*
+    for(int i=0;i<3;i++)
+    {
+         displayLoadingPixel(0,0,0,128);
+         delay(200);
+         displayLoadingPixel(0,0,0,0);
+         delay(200);
+    }
+  */  
+    return;
+   }
+  displayLoadingPixel(0,128,128,128); 
+
+
+
+  
+  //if (!wifiManager.startConfigPortal(ssid)) {
+  if (!wifiManager.autoConnect(ssid)) {
+    Serial.println("!!! Failed to open AP\n reset!");
+    delay(1000);
+    //reset and try again, or maybe put it to deep sleep
+    ESP.reset();
+    delay(5000);
+  }
+  
+
+
+  //if you get here you have connected to the WiFi
+  Serial.println("connected to WiFi! hooray!");
+   displayLoadingPixel(0,0,255,0); 
    delay(1000);
-   startAP();
+   displayLoadingPixel(0,0,0,0); 
+  
+   Serial.println(custom_stick_name.getValue());
+
+  //read updated parameters
+  //strcpy(custom_stick_name, custom_stick_name.getValue());
+
+
+
+
+  //save the custom parameters to FS
+  if (shouldSaveConfig) {
+    Serial.println("saving config");
+//    DynamicJsonBuffer jsonBuffer;
+//    JsonObject& json = jsonBuffer.createObject();
+//    json["mqtt_server"] = mqtt_server;
+//    json["custom_stick_name"] = custom_stick_name;
+
+    File configFile = SPIFFS.open("/config.json", "w");
+    if (!configFile) {
+      Serial.println("failed to open config file for writing");
+    }
+
+//    json.printTo(Serial);
+//    json.printTo(configFile);
+    configFile.close();
+    //end save
+  }
+  
 
    /*
    while (WiFi.softAPgetStationNum() < 1) { 
      delay(1);
    }
-   */
+   
    if (WiFi.softAPgetStationNum() == 0 ){                                   // If a station is connected to the ESP SoftAP
     Serial.println("Opened ESP8266 AP");
     displayLoadingPixel(0,255,255,0);
     delay(2000);
     displayLoadingPixel(0,0,0,0);
   }
-  
+  // * /
    return;
   
   }
@@ -31,7 +134,7 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
   // we arrive here if no button was pressed during boot
 
 
- 
+ /*
   starttime=millis();
 
 // add Wi-Fi networks you want to connect to
@@ -82,7 +185,7 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
 
     break; 
    }
- */
+ // * /
   }
 
 
@@ -100,13 +203,15 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
     displayLoadingPixel(0,0,0,0);
   
   }
-  
+
+
+  */
   Serial.println("\r\n");
 }
 
 
 
-
+/*
 void startAP()
 {
 
@@ -121,7 +226,7 @@ delay(1000);
     Serial.println(WiFi.localIP());  
   
 }
-
+*/
 
 void displayLoadingPixel(int num, int r,int g,int b)
 {
@@ -250,21 +355,58 @@ void startButtons()
 
   //onebuttion setup
    button1.attachClick(click1);
+   button1.attachLongPressStart(longpress1);
    //button2.attachClick(click2);
 }
 
 
 
-boolean checkforAP()
+boolean checkforButtonInterrupt()
 {
+
+  
+  
   displayLoadingPixel(0,255,0,255); 
-  delay(1000);
-  if(!digitalRead(button1_pin))
+  delay(100);
+
+  int  checkbutton=0;
+  while(true)
   {
-   Serial.println("Button pressed during boot");
-   open_accesspoint = true;
-   return true;
+   button1.tick();
+   if(animation_running || reset_config) 
+   { 
+    Serial.println("time for a break.");
+    return false;
+   }
+   
+    /*
+   if(!digitalRead(button1_pin))
+   {
+    Serial.println("Button pressed during boot -> reset config");
+    reset_config = true;
+    return true;
+   }
+   */
+   delay(1);
+   checkbutton++;
+   if(checkbutton>2100) return false;
+   
   }
 
   return false;
+}
+
+
+
+//gets called when WiFiManager enters configuration mode
+void configModeCallback (WiFiManager *myWiFiManager) {
+  Serial.println("Entered config mode");
+  displayLoadingPixel(0,255,255,0);
+}
+
+
+
+void saveConfigCallback () {
+  Serial.println("Should save config");
+  shouldSaveConfig = true;
 }

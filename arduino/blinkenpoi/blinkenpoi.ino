@@ -2,6 +2,10 @@
 #include <ESP8266WiFiMulti.h>
 //#include <ArduinoOTA.h>
 #include <ESP8266WebServer.h>
+
+#include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
+#include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
+
 #include <ESP8266mDNS.h>
 #include <FS.h>
 #include <ArduinoJson.h>
@@ -16,12 +20,6 @@ String SW_VERSION="0.9";
 
 // TODO
 /*
- * 
- *  BUTTON belegung rausfinden und eventuell fixen :(
- *  button press beim einschalten abchekcn und access point spawnen 
- *  
- *  
- *  
  *  captive portal ?
  *  webseite bauen mit einem formular fuer setup  config.html
  *  formular bekommt daten ueber json / websocket
@@ -92,7 +90,15 @@ OneButton button1(button1_pin, true);
 int animation_running=0;
 int total_animations=0;
 
-boolean open_accesspoint = false;
+// set true if button is pressed during pink phase
+boolean reset_config = false;
+
+
+// for wifimanager 
+boolean shouldSaveConfig = false;
+char stick_name[20] = "Peter";
+
+
 
 void setup() {
 
@@ -108,7 +114,7 @@ void setup() {
   
   startSPIFFS();               // Start the SPIFFS and list all contents
 
-  checkforAP(); // see if button is pressed.
+  checkforButtonInterrupt(); // see if button is pressed.
   
   startWiFi();                 // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
   
@@ -130,6 +136,7 @@ void loop() {
   checkButtons();
 
   server.handleClient();                      // run the http server
+  
   //ArduinoOTA.handle();                        // listen for OTA events
   
   showAnimation();

@@ -13,10 +13,17 @@ boolean checkButtons()
 
 
 
-
+//TODO set flag and handle content elsewhere
 void click1() {
   Serial.println("Button 1 click.");
   animation_running++;
   if(animation_running>total_animations) animation_running=0;
   load_animation(animation_running);
+} 
+
+
+//TODO set flag and handle content elsewhere 
+void longpress1() {
+  Serial.println("Button 1 longpress.");
+  reset_config = true;
 } 
