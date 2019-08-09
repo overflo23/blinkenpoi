@@ -9,18 +9,127 @@
     <script src="blinkenpoi.js" type="text/javascript"></script>
 </head>
 
+
+
+<!-------
+
+website todo
+
+ DESIGN nice with CSS
+  sections:
+   - add remote stick to list (insert ip)
+   - automatically add current active stick to list
+   - scan network for more sticks (Class C)
+   - play animations on all hosts in list
+   - editor fuer animationen
+   - animationen direkt runterladen als .tek
+   - animationen direkt HOCHLADEN an target ip aus inputfeld
+   - animationen an alle hosts in liste hochladen
+
+
+   javascript:
+    - play animation on host sollte xmlhttp machen bis success oder 20 tries.
+    - add host to list sollte sofort den button fuer die liste mit einem javascript action anlegen nciht erst am ende die liste durchgehen
+    - 
+
+
+
+
+-->
+
+
 <body>
     <center>
         <header>
             <h1>Blinkenpoi</h1>
         </header>
         <div id="content">
-                192.168.43.13<br/>
-                192.168.4.1<br/>
+            <div id="info"></div>
+
                 <br/>
                 Targethost: <input type="text" name="targethost" value="" id="targethost" />
                 <input type="button" value="Refresh" text="Refresh" name="refresh" id="targetrefreshbutton" />
+                <br/>
+                <div id="scancontent">
+                 Scan: <input type="text" name="ip" value="10.0.0.0" id="ip" />
+                 <input type="button" value="Scan" text="Scan" name="scan" id="scan" />
+                </div>
+
+                <div id="loading" style="display: none">SCANNING..</div>
+
+                 <ul id="animationlist"></ul> 
+
+                 <ul id="target_list"></ul>
+
+<!--
+                <div id="animationlist"><ul class="anim_masstargets"><li><a href="#rgb1.tek">rgb1.tek</a></li><li><a href="#test.tek">test.tek</a></li><li><a href="#5erreihe.tek">5erreihe.tek</a></li></ul><ul class="anim_masstargets"><li><a href="#rgb1.tek">rgb1.tek</a></li><li><a href="#test.tek">test.tek</a></li><li><a href="#5erreihe.tek">5erreihe.tek</a></li></ul></div>
+                <ul class="target_list"><li> <p class="name">Goib</p> <p class="version">0.9</p> <p class="ip">10.0.0.14</p> <p class="liste">SHOW ANIMATIONS</p> <p class="animations"><a href="http://10.0.0.14/run/rgb1.tek"> rgb1.tek (27)</a><a href="http://10.0.0.14/run/test.tek"> test.tek (6)</a><a href="http://10.0.0.14/run/5erreihe.tek"> 5erreihe.tek (6)</a></p> </li></ul>
+                <ul class="target_list"><li> <p class="name">Hoit</p> <p class="version">0.8</p> <p class="ip">10.0.0.15</p> <p class="liste">SHOW ANIMATIONS</p> <p class="animations"><a href="http://10.0.0.14/run/rgb1.tek"> rgb1.tek (27)</a><a href="http://10.0.0.14/run/test.tek"> test.tek (6)</a><a href="http://10.0.0.14/run/5erreihe.tek"> 5erreihe.tek (6)</a></p> </li></ul>
+-->
+
+
+
+
+
+
+
+
+
+
+<form action="http://10.0.0.14/edit.html" method="post" enctype="multipart/form-data" style="margin: 0px auto 8px auto" >
+    <input type="file" name="Choose file" accept=".poi">
+    <input class="button" type="submit" value="Upload" name="submit">
+</form>   
+
+
+
+<div id="painter">
+
+
+<table id="animaker">
+<tr id="row0"></tr>
+<tr id="row1"></tr>
+<tr id="row2"></tr>
+<tr id="row3"></tr>
+<tr id="row4"></tr>
+<tr id="row5"></tr>
+<tr id="row6"></tr>
+<tr id="row7"></tr>
+<tr id="row8"></tr>
+<tr id="row9"></tr>
+<tr id="row10"></tr>
+<tr id="row11"></tr>
+<tr id="row12"></tr>
+<tr id="row13"></tr>
+<tr id="row14"></tr>
+<tr id="row15"></tr>
+<tr id="row16"></tr>
+<tr id="row17"></tr>
+<tr id="row18"></tr>
+<tr id="row19"></tr>
+<tr id="row20"></tr>
+<tr id="row21"></tr>
+<tr id="row22"></tr>
+<tr id="row23"></tr>
+<tr id="row24"></tr>
+</table>
+
+        <input class="button" type="button" id="addcolumn" value="Add Column" name="Add Column">
+
+        <input type="color" name="color" id="color" value="#00FF00" />
+
+        <input class="button" type="button" id="transmit_anim" value="Send Data" name="Send Data">
+
+</div>
+
+
+
+
         </div>
+
+
+
+
     </center>
 </body>
 

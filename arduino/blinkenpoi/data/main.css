@@ -93,3 +93,66 @@ input[type=range]::-webkit-slider-runnable-track {
 input.enabled[type=range]::-webkit-slider-runnable-track {
     cursor: pointer;
 }
+
+
+ul#target_list {
+   /* border:1px solid black; */
+   border-collapse: collapse;
+   list-style: none;
+
+}
+
+
+
+ul#target_list li {
+    margin:0;
+    padding:0;
+}
+
+
+ul#target_list li p {
+    display:inline-block;
+    padding: 5px;
+    margin:0;
+}
+
+p.name {
+    background-color:orange;
+}
+
+p.version {
+    background-color:greenyellow;
+}
+
+p.ip {
+    background-color:blueviolet;
+}
+
+p.liste {
+    background-color:lightskyblue;
+    border:1px solid black;
+}
+
+p.animations {
+    background-color:red;
+    margin:4px;
+    padding:4px;
+    /*display:inline;*/  
+}
+p.animations a {
+ display:block;
+}
+
+#animaker {
+ border:none;
+ table-layout: fixed;
+}
+
+#animaker tr td {
+    b!order-collapse: collapse;
+    border:1px solid black;
+    margin:1px;
+    width:10px;
+    height:10px;
+    background-color: black;
+}

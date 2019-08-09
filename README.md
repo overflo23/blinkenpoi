@@ -7,5 +7,8 @@ A high tech IOT blinky toy consisting of
 * Custom PCB with 2 Buttons
 * Bells and whistles
 
+/arduino contains firmware code 
+/arduino/blinkenpoi/data contains webserver files
+/arduino/blinkenpoi/data contains some animations 
 
 Details here: https://metalab.at/wiki/Blinkenpoi
