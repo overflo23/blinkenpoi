@@ -79,9 +79,18 @@ void showAnimation()
 {
   if(!animation_loaded) return;
 
-  for(int i=0;i<50;i++)
+  for(int i=0;i<25;i++)
   {
-    strip.setPixelColor(i,getByte(),getByte(),getByte());
+   int r= getByte();
+   int g= getByte();
+   int b= getByte();
+   
+      
+
+    // anim data is flipped.. the javascript was too complicated at some point and i didnt care anymore :)
+    strip.setPixelColor(24-i,r,g,b);
+    // mirror on other side
+    strip.setPixelColor(25+i,r,g,b);
   }
   strip.show();
 

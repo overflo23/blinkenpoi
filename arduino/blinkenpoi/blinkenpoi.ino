@@ -1,5 +1,5 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
+//#include <ESP8266WiFiMulti.h>
 //#include <ArduinoOTA.h>
 #include <ESP8266WebServer.h>
 
@@ -15,44 +15,83 @@
 #include "OneButton.h"
 
 
+/*
+ *   What is going on in here?
+ * 
+ *  This is the firmware running on the Blinkenpoi 
+ *  Documentation: 
+ *   https://metalab.at/wiki/Blinkenpoi
+ * 
+ *  First time turn on:
+ * 
+ *  When you turn on the blinkenpoi checks its internally ROM if it is already configured for a specific wlan.
+ *  If it is configured it will try to connect to it, if it fails it opens its own acces point for configuration
+ *  Once connected to the accesspoint you should be welcomed by a captive portal.
+ *  If this fails the poi is accessable at 192.168.4.1
+ * 
+ *  After configuration it saves the stick anme and network credentials if it was successfully connecting.
+ *  Success is indicted by a green led.
+ * 
+ *  --
+ *  
+ *  Normal operation:
+ *  Turn on the stick, it shines a pink led for ~ 2 seconds.
+ *  This can be interrupted by a short press of the button.
+ *  If you interrupt now the network is NOT configured and the stick is avainalbe offline and you can cycle trough the animations on the stick with the button.
+ *  
+ *  If you press the button during the pink phase and keep it pressed or ~1.5 seconds you activate a configuration RESET.
+ *  The saved wifi information is deleted and an access point is opened for configuration.
+ *  
+ *  Once the stick operates it waits for a trigger on the weninterface.
+ *  Animation playback is triggered by an HTTP request.
+ *  for example: http://10.0.0.42/run/rgb1.tek 
+ * 
+ *  Of course you can override the animation playback with the button at any time.
+ * 
+ *   My code is CC0 Public domain, (ab)use at will. 
+ *   But some libraries use GPL or other licenses which apply.
+ */
+
+
+// button2 is borken because the wemos D1 has a strong pulldown resistor that can not be overridden with internal_pullup on D8 / GPIO15
+// well. fuck.
+// so it is a one-button interface from hell than :(
+
+// valid pinout for PCB rev. 3.0
+const int button1_pin=2; // D4
+
+// valid pinout for PCB rev. 1.0
+//const int button1_pin=12; // D6
+
+
+
 
 String SW_VERSION="0.9";
 
 // TODO
 /*
- *  captive portal ?
- *  webseite bauen mit einem formular fuer setup  config.html
- *  formular bekommt daten ueber json / websocket
- *  felder
- *   - device name (lowercase 8 chars a-z/1-0/_-)
- *   - wlan to join
- *   - wlan passwort
- * 
- * resourcen
- *  - get config parameters
- * 
+
+ // html fuer upload von .tek file vom computer
+ // html fuer upload von .tek file direkt ueber js
  */
 
 
-ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
+//ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 
 ESP8266WebServer server(80);       // Create a webserver object that listens for HTTP request on port 80
 //WebSocketsServer webSocket(81);    // create a websocket server on port 81
 
 File fsUploadFile;                 // a File variable to temporarily store the received file
 
+//const char *password = "";   // The password required to connect to it, leave blank for an open network
+
+
+
 const char *ssid = "Blinkenpoi"; // The name of the Wi-Fi network that will be created
-const char *password = "";   // The password required to connect to it, leave blank for an open network
-
-
 
 String STICK_NAME="No. 1";
 
 
-// TODO load from config file
-const char *wificonnect = "pewpew"; // The name of the Wi-Fi network that will be created
-const char *wificonnectpassword = "deadbeefac";   // The password required to connect to it, leave blank for an open network
-int const connection_timeout = 60000; // 60s timeout, after which we open our own access point
 
 
 /*
@@ -70,14 +109,6 @@ const char* mdnsName = "blinkenpoi"; // Domain name for the mDNS responder
 
 
 
-// button2 is brken because the wemos D1 has a strong pulldown resistor that can not be overridden with internal_pullup on D8 / GPIO15
-// valid pinout for PCB rev. 3.0
-//const int button1_pin=2; // D4
-//const int button2_pin=15; // D8
-
-// valid pinout for PCB rev. 1.0
-const int button1_pin=12; // D6
-//const int button2_pin=15; // D8
 
 
 
@@ -96,8 +127,7 @@ boolean reset_config = false;
 
 // for wifimanager 
 boolean shouldSaveConfig = false;
-char stick_name[20] = "Peter";
-
+char custom_stick_name_str[20] = "";
 
 
 void setup() {

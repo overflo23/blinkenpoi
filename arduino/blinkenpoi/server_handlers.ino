@@ -53,7 +53,7 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
   // receive information about poi
   if (path.startsWith("/get_info"))
   {
-    String info_str="{ \"version\":"+SW_VERSION+", \"name\":\""+STICK_NAME+"\", \"ip\":\""+WiFi.localIP().toString()+"\", \"wlan\":\"WLAN\", \"wlan\":\"PASSWD\",\"animations\": "+get_anim_json()+" }";
+    String info_str="{ \"version\":"+ (String) SW_VERSION +", \"name\":\""+ (String) custom_stick_name_str +"\", \"ip\":\""+WiFi.localIP().toString()+"\",\"animations\": "+get_anim_json()+" }";
 
      server.sendHeader("Access-Control-Allow-Origin","*");
      server.send(200, "application/javascript", info_str);
@@ -66,16 +66,6 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
 
 
 
-
-
-
-
-
-
-
-
-
-  
   
   if (path.endsWith("/")) path += "index.html";          // If a folder is requested, send the index file
   String contentType = getContentType(path);             // Get the MIME type
@@ -95,8 +85,14 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
 
 void handleFileUpload(){ // upload a new file to the SPIFFS
   HTTPUpload& upload = server.upload();
+  
+
+
+  
   String path;
   if(upload.status == UPLOAD_FILE_START){
+      server.sendHeader("Access-Control-Allow-Origin","*");
+
     path = upload.filename;
     path = "/animations/"+path;
     if(SPIFFS.exists(path))                      // version of that file must be deleted (if it exists)
@@ -143,43 +139,3 @@ String get_anim_json()
     return anim_list;
   
 }
-
-
-
-
-
-
-
-/*
-void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) { // When a WebSocket message is received
-  switch (type) {
-    case WStype_DISCONNECTED:             // if the websocket is disconnected
-      Serial.printf("[%u] Disconnected!\n", num);
-      break;
-    case WStype_CONNECTED: {              // if a new websocket connection is established
-        IPAddress ip = webSocket.remoteIP(num);
-        Serial.printf("[%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
-//        rainbow = false;                  // Turn rainbow off when a new connection is established
-      }
-      break;
-    case WStype_TEXT:                     // if new text data is received
-      Serial.printf("[%u] get Text: %s\n", num, payload);
-
-     
-  //    if (payload[0] == '#') {            // we get RGB data
-  //      uint32_t rgb = (uint32_t) strtol((const char *) &payload[1], NULL, 16);   // decode rgb data
-  //      int r = ((rgb >> 20) & 0x3FF);                     // 10 bits per color, so R: bits 20-29
-  //      int g = ((rgb >> 10) & 0x3FF);                     // G: bits 10-19
-  //      int b =          rgb & 0x3FF;                      // B: bits  0-9
-  //    } else if (payload[0] == 'R') {                      // the browser sends an R when the rainbow effect is enabled
-  //      rainbow = true;
-  //    } else if (payload[0] == 'N') {                      // the browser sends an N when the rainbow effect is disabled
-  //      rainbow = false;
-  //    }
-      
-      
-      break;
-  }
-}
-
-*/

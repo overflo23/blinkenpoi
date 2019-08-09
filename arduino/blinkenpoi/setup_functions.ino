@@ -35,7 +35,7 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
   // displayLoadingPixel(0,255,0,0); 
   // delay(1000);
 
-    WiFiManagerParameter custom_stick_name("stickname", "Stick Label", stick_name, 20);
+    WiFiManagerParameter custom_stick_name("stickname", "Stick Label", custom_stick_name_str, 20);
 
     //set config save notify callback
     wifiManager.setSaveConfigCallback(saveConfigCallback);
@@ -43,25 +43,14 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
     wifiManager.setAPCallback(configModeCallback);
     wifiManager.addParameter(&custom_stick_name);
 
-  //set static ip
-  //wifiManager.setSTAStaticIPConfig(IPAddress(10,0,1,99), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
+    //set static ip
+    //wifiManager.setSTAStaticIPConfig(IPAddress(10,0,1,99), IPAddress(10,0,1,1), IPAddress(255,255,255,0));
 
 
-    //wifiManager.setAPCallback( testcallback );
-    //  
 
    if(animation_running)
    {
-    Serial.println("Button shortpressed, no network config now.");
-/*
-    for(int i=0;i<3;i++)
-    {
-         displayLoadingPixel(0,0,0,128);
-         delay(200);
-         displayLoadingPixel(0,0,0,0);
-         delay(200);
-    }
-  */  
+    Serial.println("Button shortpressed, no network config now.");  
     return;
    }
   displayLoadingPixel(0,128,128,128); 
@@ -82,151 +71,54 @@ void startWiFi() { // Start a Wi-Fi access point, and try to connect to some giv
 
   //if you get here you have connected to the WiFi
   Serial.println("connected to WiFi! hooray!");
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP().toString());
+  
    displayLoadingPixel(0,0,255,0); 
    delay(1000);
    displayLoadingPixel(0,0,0,0); 
   
    Serial.println(custom_stick_name.getValue());
 
+
+
+
+
+
+
+
   //read updated parameters
-  //strcpy(custom_stick_name, custom_stick_name.getValue());
-
-
-
+  strcpy(custom_stick_name_str, custom_stick_name.getValue());
 
   //save the custom parameters to FS
   if (shouldSaveConfig) {
     Serial.println("saving config");
-//    DynamicJsonBuffer jsonBuffer;
-//    JsonObject& json = jsonBuffer.createObject();
+    DynamicJsonBuffer jsonBuffer;
+    JsonObject& json = jsonBuffer.createObject();
 //    json["mqtt_server"] = mqtt_server;
-//    json["custom_stick_name"] = custom_stick_name;
+    json["custom_stick_name"] = custom_stick_name_str;
 
     File configFile = SPIFFS.open("/config.json", "w");
     if (!configFile) {
       Serial.println("failed to open config file for writing");
     }
 
-//    json.printTo(Serial);
-//    json.printTo(configFile);
+    json.printTo(Serial);
+    json.printTo(configFile);
     configFile.close();
     //end save
   }
   
 
-   /*
-   while (WiFi.softAPgetStationNum() < 1) { 
-     delay(1);
-   }
-   
-   if (WiFi.softAPgetStationNum() == 0 ){                                   // If a station is connected to the ESP SoftAP
-    Serial.println("Opened ESP8266 AP");
-    displayLoadingPixel(0,255,255,0);
-    delay(2000);
-    displayLoadingPixel(0,0,0,0);
-  }
-  // * /
-   return;
-  
-  }
-
-
-  // we arrive here if no button was pressed during boot
-
-
- /*
-  starttime=millis();
-
-// add Wi-Fi networks you want to connect to
-//TODO: load from config file / json
-
-  wifiMulti.addAP(wificonnect, wificonnectpassword);
-//  wifiMulti.addAP("henderl", "bokbok123");
-//  wifiMulti.addAP("pewpew", "deadbeefac");
-//  wifiMulti.addAP("pewpew_office", "deadbeefac");
-//  wifiMulti.addAP("somehotspot_without_password");   
-
-  
-  Serial.print("Trying to connect to '");
-  Serial.print(wificonnect);
-  Serial.print("' using password '");
-  Serial.print(wificonnectpassword);
-  Serial.println("'");
-
-
-  
-  while ((wifiMulti.run() != WL_CONNECTED && WiFi.softAPgetStationNum() < 1)) {  // Wait for the Wi-Fi to connect
-   
-    
-    
-    // skip setup if manual override 
-    if(breakable_delay(250))
-    {
-      Serial.println("Button pressed, aborting setup");
-      return;
-    }
-
-    displayLoadingPixel(0,0,0,255);
-    if(breakable_delay(250))
-    {
-      Serial.println("Button pressed, aborting setup");
-      return;
-    }  
-    
-    displayLoadingPixel(0,0,0,0);    
-   
-    Serial.print('.');
- 
-/*
-   if((millis()-starttime)> connection_timeout) 
-   {   
-    Serial.println("\r\nTimeout during network connect. Opening own AP");
-    startAP();
-
-    break; 
-   }
- // * /
-  }
 
 
 
-  Serial.println("\r\n");
-  
-  if(wifiMulti.run() == WL_CONNECTED) {      // If the ESP is connected to an AP
-    
-    Serial.print("Connected to ");
-    Serial.println(WiFi.SSID());             // Tell us what network we're connected to
-    Serial.print("IP address:\t");
-    Serial.print(WiFi.localIP());            // Send the IP address of the ESP8266 to the computer
-    displayLoadingPixel(0,0,255,0);
-    delay(2000);
-    displayLoadingPixel(0,0,0,0);
-  
-  }
 
-
-  */
   Serial.println("\r\n");
 }
 
 
 
-/*
-void startAP()
-{
-
-  WiFi.softAP(ssid, password);             // Start the access point
-  Serial.print("Access Point '");
-  Serial.print(ssid);
-  Serial.print("' started with password '");
-  Serial.print(password);
-  Serial.println("'"); 
-delay(1000);
-    Serial.print("IP address:\t");
-    Serial.println(WiFi.localIP());  
-  
-}
-*/
 
 void displayLoadingPixel(int num, int r,int g,int b)
 {
@@ -282,22 +174,59 @@ void startOTA() { // Start the OTA service
 */
 
 void startSPIFFS() { // Start the SPIFFS and list all contents
-  SPIFFS.begin();                             // Start the SPI Flash File System (SPIFFS)
-  Serial.println("SPIFFS started. Contents:");
-  {
-    Dir dir = SPIFFS.openDir("/");
-    while (dir.next()) {                      // List the file system contents
-      String fileName = dir.fileName();
-      size_t fileSize = dir.fileSize();
-      Serial.printf("\tFS File: %s, size: %s\r\n", fileName.c_str(), formatBytes(fileSize).c_str());
-      if (fileName.startsWith("/animations/")) total_animations++;
 
+  // read config file
+    if (SPIFFS.begin()) 
+    {
+ 
+     Serial.println("SPIFFS started. Contents:");
+     {
+      Dir dir = SPIFFS.openDir("/");
+      while (dir.next()) 
+      {                      // List the file system contents
+       String fileName = dir.fileName();
+       size_t fileSize = dir.fileSize();
+       Serial.printf("\tFS File: %s, size: %s\r\n", fileName.c_str(), formatBytes(fileSize).c_str());
+       if (fileName.startsWith("/animations/")) total_animations++;
+      }
+      Serial.printf("\n");
+     }
+    
+     if (SPIFFS.exists("/config.json")) 
+     {
+      //file exists, reading and loading
+      Serial.println("reading config file");
+      File configFile = SPIFFS.open("/config.json", "r");
+      if (configFile) {
+        Serial.println("opened config file");
+        size_t size = configFile.size();
+        // Allocate a buffer to store contents of the file.
+        std::unique_ptr<char[]> buf(new char[size]);
+
+        configFile.readBytes(buf.get(), size);
+        DynamicJsonBuffer jsonBuffer;
+        JsonObject& json = jsonBuffer.parseObject(buf.get());
+        json.printTo(Serial);
+        if (json.success()) {
+          Serial.println("\nparsed json");
+
+          strcpy(custom_stick_name_str, json["custom_stick_name"]);
+
+
+        } else {
+          Serial.println("failed to load json config");
+        }
+      }
     }
-    Serial.printf("\n");
-
-
-      
+  } else {
+    Serial.println("failed to mount FS");
   }
+  //end read
+
+
+
+
+  
 }
 
 
