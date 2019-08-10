@@ -41,108 +41,220 @@ website todo
 <body>
     <center>
         <header class="section">
-            <h1>Blinkenpoi</h1>
+          <div class="circle-animation-container">
+            <div class="circle-multiple">
+              <div class="circle"></div>
+              <div class="circle"></div>
+              <div class="circle"></div>
+            </div>
+          </div>
+          <h1>Blinkenpoi</h1>
         </header>
-        <div id="content">
-            <div id="info"></div>
-                <br/>
-            <div class="section">
-              <h4>Connect</h4>
-                Targethost: <input type="text" name="targethost" value="" id="targethost" />
-                <input type="button" value="Refresh" text="Refresh" name="refresh" id="targetrefreshbutton" />
-                <br/>
+        <div id="content" class="row">
+          <div class="leftbox">
+            <nav>
+              <a id="settings" class="active nav-element">
+                <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                   width="1280.000000pt" height="1280.000000pt" viewBox="0 0 1280.000000 1280.000000"
+                   preserveAspectRatio="xMidYMid meet">
+                  <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
+                  fill="#FFF" stroke="none">
+                  <path d="M5930 10719 c-231 -10 -379 -25 -660 -65 -106 -16 -600 -112 -720
+                  -140 -126 -30 -628 -192 -915 -294 -513 -183 -1101 -488 -1615 -838 -484 -329
+                  -1045 -811 -1128 -968 -84 -161 -80 -365 10 -537 38 -73 161 -201 232 -242
+                  172 -100 356 -107 531 -21 76 38 119 73 306 245 451 415 1062 823 1617 1080
+                  391 182 1056 407 1442 490 414 88 954 141 1440 141 520 0 861 -44 1515 -195
+                  433 -100 887 -263 1312 -472 625 -307 1138 -661 1656 -1141 121 -112 202 -160
+                  315 -187 136 -33 299 -4 423 76 128 83 228 217 264 355 9 34 15 101 15 165 0
+                  127 -21 206 -74 283 -59 85 -414 407 -691 627 -765 606 -1706 1084 -2660 1353
+                  -441 124 -735 184 -1130 231 -71 8 -184 22 -250 30 -290 34 -785 44 -1235 24z"/>
+                  <path d="M6095 8609 c-219 -11 -356 -27 -570 -66 -501 -91 -760 -158 -1093
+                  -282 -733 -275 -1433 -715 -1943 -1221 -150 -149 -178 -192 -206 -323 -31
+                  -148 0 -300 88 -432 94 -141 212 -226 367 -266 95 -24 159 -24 256 1 106 27
+                  163 60 274 160 375 338 582 493 897 675 657 380 1485 605 2225 605 256 0 642
+                  -41 915 -96 801 -163 1551 -552 2186 -1134 149 -137 212 -178 316 -205 122
+                  -32 284 -12 396 47 80 43 203 161 250 239 119 202 106 454 -33 634 -44 57
+                  -323 312 -470 429 -847 679 -1878 1098 -2985 1216 -262 27 -573 34 -870 19z"/>
+                  <path d="M6145 6494 c-102 -9 -344 -45 -460 -70 -511 -109 -994 -325 -1394
+                  -624 -151 -113 -382 -320 -448 -402 -166 -206 -172 -446 -18 -678 178 -268
+                  514 -348 770 -185 28 17 104 81 170 141 149 135 223 194 344 273 305 200 624
+                  318 992 366 153 20 494 20 641 -1 392 -54 775 -218 1123 -479 39 -29 130 -107
+                  203 -174 187 -171 270 -207 452 -199 155 7 274 60 386 173 185 184 234 440
+                  128 665 -30 64 -53 92 -157 195 -472 464 -1084 789 -1752 929 -256 53 -394 68
+                  -670 71 -143 1 -282 1 -310 -1z"/>
+                  <path d="M6255 4530 c-415 -59 -769 -316 -961 -697 -145 -287 -165 -642 -53
+                  -946 157 -425 547 -746 983 -806 99 -14 273 -14 373 0 448 62 867 437 998 894
+                  56 195 56 465 0 660 -147 508 -625 881 -1150 899 -71 3 -157 1 -190 -4z"/>
+                  </g>
+                </svg>
+              </a>
+              <a id="animator" class="nav-element">
+                  <svg version="1.1" id="poi-animations" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" style="transform-origin: 50px 50px 0px;" xml:space="preserve">
+                    <defs>
+                      <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                      </linearGradient>
+                    </defs>
+                    <g style="transform-origin: 50px 50px 0px; transform: scale(0.6);">
+                      <g style="transform-origin: 50px 50px 0px;">
+                        <style type="text/css" class="ld ld-spin" style="transform-origin: 50px 50px 0px; animation-duration: 1s; animation-delay: -1s;">
+                        .st43{stroke-width:3.5;stroke:#333}
+                        .st58,.st59,.st60,.st61,.st62,.st63{stroke-width:5;stroke-linecap:round}
+                        .st59,.st60,.st61,.st62,.st63{fill:none;stroke:#333;stroke-linejoin:round}
+                        </style>
+                        <g class="ld ld-spin" style="transform-origin: 50px 50px 0px; animation-duration: 1s; animation-delay: -0.933333s;">
+                          <path class="st43" d="M54.523,89.999h-9.046c-3.209,0-5.567-3.011-4.797-6.126l4.523-17.308c0.545-2.206,2.524-3.756,4.797-3.756h0 c2.272,0,4.252,1.55,4.797,3.756l4.523,17.308C60.089,86.988,57.732,89.999,54.523,89.999z" fill="" stroke="#FFF" style="fill: url(#grad1); stroke: #FFF;"></path>
+                        </g>
+                        <g class="ld ld-spin" style="transform-origin: 50px 50px 0px; animation-duration: 1s; animation-delay: -0.866667s;">
+                          <circle class="st43" cx="50" cy="50" r="7.738" fill="rgb(240, 175, 107)" stroke="#FFF" style="fill:#FFF; stroke: #FFF;"></circle>
+                        </g>
+                        <g class="ld ld-spin" style="transform-origin: 50px 50px 0px; animation-duration: 1s; animation-delay: -0.8s;">
+                          <path class="st59" d="M67.025,86.199C80.601,79.802,90,66.001,90,50c0-21.434-16.859-38.928-38.039-39.95 C51.311,10.018,50.658,10,50,10s-1.311,0.018-1.961,0.05C26.859,11.072,10,28.566,10,50c0,16.001,9.399,29.802,22.975,36.199" stroke="#FFF" style="stroke: #FFF;"></path>
+                        </g>
+                        <g class="ld ld-spin" style="transform-origin: 50px 50px 0px; animation-duration: 1s; animation-delay: -0.733333s;">
+                          <path class="st59" d="M64.542,76.24C73.76,71.12,80,61.291,80,50c0-16.393-13.151-29.706-29.477-29.987 C50.349,20.01,50.176,20,50,20s-0.349,0.01-0.523,0.013C33.151,20.294,20,33.607,20,50c0,11.291,6.24,21.12,15.458,26.24" stroke="#FFF" style="stroke: #FFF;"></path>
+                        </g>
+                        <g class="ld ld-spin" style="transform-origin: 50px 50px 0px; animation-duration: 1s; animation-delay: -0.666667s;">
+                          <path class="st59" d="M38.015,65.984C33.157,62.335,30,56.543,30,50c0-9.996,7.341-18.255,16.921-19.739 C47.927,30.105,48.95,30,50,30s2.073,0.105,3.079,0.261C62.659,31.745,70,40.004,70,50c0,6.543-3.157,12.335-8.015,15.984" stroke="#FFF" style="stroke: #FFF;">
+                          </path>
+                        </g>
+                      </g>
+                    </g>
+                  <style type="text/css" class="ld ld-spin" style="transform-origin: 50px 50px 0px; animation-duration: 1s; animation-delay: -0.266667s;">path,ellipse,circle,rect,polygon,polyline,line { stroke-width: 0; }@keyframes ld-spin {
+                  0% {
+                    -webkit-transform: rotate(0);
+                    transform: rotate(0);
+                    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+                  }
+                  50% {
+                    -webkit-transform: rotate(180deg);
+                    transform: rotate(180deg);
+                    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+                  }
+                  100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                  }
+                }
+                @-webkit-keyframes ld-spin {
+                  0% {
+                    -webkit-transform: rotate(0);
+                    transform: rotate(0);
+                    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+                  }
+                  50% {
+                    -webkit-transform: rotate(180deg);
+                    transform: rotate(180deg);
+                    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+                  }
+                  100% {
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                  }
+                }
+                .ld.ld-spin {
+                  -webkit-animation: ld-spin 1s infinite;
+                  animation: ld-spin 1s infinite;
+                }
+                </style>
+              </svg>
+              </a>
+            </nav>
+          </div>
+          <div class="rightbox">
+            <div class="settings">
+              <div class="section">
+                <div id="info"></div>
+                <h4>Connect</h4>
+                <div id="targethostcontent">
+                  Targethost: <input type="text" name="targethost" value="" id="targethost" />
+                  <input type="button" value="Refresh" text="Refresh" name="refresh" id="targetrefreshbutton" />
+                </div>
                 <div id="scancontent">
-                 Scan: <input type="text" name="ip" value="10.0.0.0" id="ip" />
-                 <input type="button" value="Scan" text="Scan" name="scan" id="scan" />
-               </div>
-               <div id="loading" style="display: none">
-                 <div id="loading-animation">
-                   <div class="wifi-symbol">
-                     <div class="wifi-circle first"></div>
-                     <div class="wifi-circle second"></div>
-                     <div class="wifi-circle third"></div>
-                     <div class="wifi-circle fourth"></div>
-                   </div>
+                   Scan: <input type="text" name="ip" value="10.0.0.0" id="ip" />
+                   <input type="button" value="Scan" text="Scan" name="scan" id="scan" />
                  </div>
-                 <div id="loading-text">SCANNING..</div>
-               </div>
-             </div>
-                <div class="section">
-                  <h4>Animations</h4>
-                  <ul id="animationlist"></ul>
+                 <div id="loading" style="display: none">
+                   <div id="loading-animation">
+                     <div class="wifi-symbol">
+                       <div class="wifi-circle first"></div>
+                       <div class="wifi-circle second"></div>
+                       <div class="wifi-circle third"></div>
+                       <div class="wifi-circle fourth"></div>
+                     </div>
+                   </div>
+                   <div id="loading-text">SCANNING..</div>
+                 </div>
+              </div>
+              <div class="section">
+                <h4>Connected Poi</h4>
+                <ul id="target_list">
+                  <li class="list-header row">
+                    <p class="col-2">Name</p>
+                    <p class="col-2">Version</p>
+                    <p class="col-2">Ip</p>
+                    <p class="col-2">Animations</p>
+                  </li>
+                </ul>
+              </div>
+              <div class="section">
+                <h4>Animations</h4>
+                <ul id="animationlist"></ul>
+              </div>
+            </div>
+            <div class="animator">
+              <div class="section">
+                <h4>Upload Animation</h4>
+                <form action="/edit.html" method="post" enctype="multipart/form-data" style="margin: 0px auto 8px auto" >
+                    <input type="file" name="Choose file" accept=".poi">
+                    <input class="button" type="submit" value="Upload" name="submit">
+                </form>
+              </div>
+              <div class="section">
+                <h4>Create Animation</h4>
+                <div id="painter">
+                  <table id="animaker">
+                    <tr id="row0"></tr>
+                    <tr id="row1"></tr>
+                    <tr id="row2"></tr>
+                    <tr id="row3"></tr>
+                    <tr id="row4"></tr>
+                    <tr id="row5"></tr>
+                    <tr id="row6"></tr>
+                    <tr id="row7"></tr>
+                    <tr id="row8"></tr>
+                    <tr id="row9"></tr>
+                    <tr id="row10"></tr>
+                    <tr id="row11"></tr>
+                    <tr id="row12"></tr>
+                    <tr id="row13"></tr>
+                    <tr id="row14"></tr>
+                    <tr id="row15"></tr>
+                    <tr id="row16"></tr>
+                    <tr id="row17"></tr>
+                    <tr id="row18"></tr>
+                    <tr id="row19"></tr>
+                    <tr id="row20"></tr>
+                    <tr id="row21"></tr>
+                    <tr id="row22"></tr>
+                    <tr id="row23"></tr>
+                    <tr id="row24"></tr>
+                  </table>
+                  <input type="color" name="color" id="color" value="#00FF00" />
+                  <input class="button" type="button" id="addcolumn" value="Add Column" name="Add Column">
+                  <input class="button" type="button" id="transmit_anim" value="Send Data" name="Send Data">
                 </div>
-                <div class="section">
-                  <h4>Connected Poi</h4>
-                  <ul id="target_list"></ul>
-                </div>
+              </div>
+            </div>
+          </div>
 
 <!--
                 <div id="animationlist"><ul class="anim_masstargets"><li><a href="#rgb1.tek">rgb1.tek</a></li><li><a href="#test.tek">test.tek</a></li><li><a href="#5erreihe.tek">5erreihe.tek</a></li></ul><ul class="anim_masstargets"><li><a href="#rgb1.tek">rgb1.tek</a></li><li><a href="#test.tek">test.tek</a></li><li><a href="#5erreihe.tek">5erreihe.tek</a></li></ul></div>
                 <ul class="target_list"><li> <p class="name">Goib</p> <p class="version">0.9</p> <p class="ip">10.0.0.14</p> <p class="liste">SHOW ANIMATIONS</p> <p class="animations"><a href="http://10.0.0.14/run/rgb1.tek"> rgb1.tek (27)</a><a href="http://10.0.0.14/run/test.tek"> test.tek (6)</a><a href="http://10.0.0.14/run/5erreihe.tek"> 5erreihe.tek (6)</a></p> </li></ul>
                 <ul class="target_list"><li> <p class="name">Hoit</p> <p class="version">0.8</p> <p class="ip">10.0.0.15</p> <p class="liste">SHOW ANIMATIONS</p> <p class="animations"><a href="http://10.0.0.14/run/rgb1.tek"> rgb1.tek (27)</a><a href="http://10.0.0.14/run/test.tek"> test.tek (6)</a><a href="http://10.0.0.14/run/5erreihe.tek"> 5erreihe.tek (6)</a></p> </li></ul>
 -->
-
-
-
-
-
-
-
-
-
-<div class="section">
-  <h4>Upload Animation</h4>
-  <form action="/edit.html" method="post" enctype="multipart/form-data" style="margin: 0px auto 8px auto" >
-      <input type="file" name="Choose file" accept=".poi">
-      <input class="button" type="submit" value="Upload" name="submit">
-  </form>
-</div>
-
-
-<div class="section">
-  <h4>Create Animation</h4>
-  <div id="painter">
-    <table id="animaker">
-      <tr id="row0"></tr>
-      <tr id="row1"></tr>
-      <tr id="row2"></tr>
-      <tr id="row3"></tr>
-      <tr id="row4"></tr>
-      <tr id="row5"></tr>
-      <tr id="row6"></tr>
-      <tr id="row7"></tr>
-      <tr id="row8"></tr>
-      <tr id="row9"></tr>
-      <tr id="row10"></tr>
-      <tr id="row11"></tr>
-      <tr id="row12"></tr>
-      <tr id="row13"></tr>
-      <tr id="row14"></tr>
-      <tr id="row15"></tr>
-      <tr id="row16"></tr>
-      <tr id="row17"></tr>
-      <tr id="row18"></tr>
-      <tr id="row19"></tr>
-      <tr id="row20"></tr>
-      <tr id="row21"></tr>
-      <tr id="row22"></tr>
-      <tr id="row23"></tr>
-      <tr id="row24"></tr>
-    </table>
-    <input type="color" name="color" id="color" value="#00FF00" />
-    <input class="button" type="button" id="addcolumn" value="Add Column" name="Add Column">
-    <input class="button" type="button" id="transmit_anim" value="Send Data" name="Send Data">
-  </div>
-</div>
-
-
-
-
         </div>
-
-
-
-
     </center>
 </body>
 

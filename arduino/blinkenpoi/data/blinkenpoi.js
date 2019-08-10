@@ -84,7 +84,13 @@ function add_stick_to_list(data,ip)
     // load list from blinkenpoi
     var items = [];
 
-    info_item = "<p class=\"name\">"+data["name"]+"</p> <p class=\"version\">"+data["version"]+"</p> <p class=\"ip\">"+data["ip"]+"</p> <p class=\"liste\">TOGGLE ANIMATIONS</p> <p style=\"display:none\" class=\"animations\">";
+    info_item = "<div class='name col-2'>"+data["name"]+
+                "</div> <div class='version col-2'>"+
+                data["version"]+"</div> <div class='ip col-2'>"+
+                data["ip"]+
+                "</div> <div class='liste col-6'>"+
+                "<button onclick='console.log(this.parentNode.childNodes[1].style.display=\"block\")' class='toggle-animations'> TOGGLE ANIMATIONS</button>"+
+                "<div style='display:none' class='animations'> ";
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
@@ -94,7 +100,7 @@ function add_stick_to_list(data,ip)
       available_anims[key]=1;
 
     })
-    info_item += "</p>";
+    info_item += "</div></div>";
 
 
     items.push(info_item);
@@ -159,10 +165,10 @@ function get_info(ip)
     });
 
     // modify a links to use ajax in the background
-    $( "#target_list" ).find( "p.liste" ).click (function (event) {
+    $( "#target_list" ).find( "div.liste" ).click (function (event) {
      var target = $( event.target );
      //console.log("x: " ,target.parent());
-     target.parent().find("p.animations").toggle();
+     target.parent().find("div.animations").toggle();
 
   // $( "ul" ).click( handler ).find( "ul" ).hide();
 
@@ -422,8 +428,8 @@ function addcolumn()
 $().ready(function() {
 
 
-//  $("#targethost").val(window.location.hostname);
-  $("#targethost").val("10.0.0.14");
+ $("#targethost").val(window.location.hostname+":"+window.location.port);
+  // $("#targethost").val("10.0.0.14");
 
   $( "#targetrefreshbutton").click (function (event) {
    target=$("#targethost").val();
@@ -451,14 +457,19 @@ $().ready(function() {
    $( "#transmit_anim").click (function (event) {
     transmit_anim();
       });
-
-
-
-    $( "#addcolumn").click (function (event) {
+   $( "#addcolumn").click (function (event) {
       addcolumn();
         });
-
-
-
-
+  // nav menu
+  $("#settings").click(e=>{
+    $(".settings").show();
+    $(".animator").hide();
+  })
+  $("#animator").click(e=>{
+    $(".animator").show();
+    $(".settings").hide();
+  })
+  $(".toggle-animations").click(e=>{
+    console.log("click");
+  })
 });
