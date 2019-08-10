@@ -9,7 +9,7 @@ function load_animations(ip)
 
 
   var xqrc= $.getJSON( "http://"+ip+"/get_info", function( data ) {
-  
+
 
 
     add_stick_to_list(data,ip);
@@ -23,7 +23,7 @@ function load_animations(ip)
       //available_pois[data["ip"]]["animations"].push(val);
 
     });
-   
+
 
   // append entries to webinterface
     $( "<ul/>", {
@@ -32,7 +32,7 @@ function load_animations(ip)
     }).appendTo( "#content" );
 */
   });
-  
+
 
   xqrc.always(function() {
     // modify a links to use ajax in the background
@@ -44,7 +44,7 @@ function load_animations(ip)
       event.preventDefault(); // stop the browser following the link
     });
   });
-  
+
 
 
 
@@ -85,17 +85,17 @@ function add_stick_to_list(data,ip)
     var items = [];
 
     info_item = "<p class=\"name\">"+data["name"]+"</p> <p class=\"version\">"+data["version"]+"</p> <p class=\"ip\">"+data["ip"]+"</p> <p class=\"liste\">TOGGLE ANIMATIONS</p> <p style=\"display:none\" class=\"animations\">";
-    
+
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<a href='http://"+ip+"/run/"+key+"'> "+key+" ("+ (val/25) +")</a>"; 
-      
+      info_item += "<a href='http://"+ip+"/run/"+key+"'> "+key+" ("+ (val/25) +")</a>";
+
       // add to global anim list
       available_anims[key]=1;
 
     })
     info_item += "</p>";
-  
+
 
     items.push(info_item);
     available_pois[data["ip"]]=data;
@@ -122,7 +122,7 @@ function get_info(ip)
 
 
 
-  
+
   xqrc.always(function() {
     scanner_counter+=1;
     console.log(scanner_counter);
@@ -138,6 +138,7 @@ function get_info(ip)
 
     // laoding verstecken
     $("#loading").hide();
+    $( "#scancontent").show();
 
     // modify a links to use ajax in the background
     $( ".animation_list" ).find( "a" ).click (function (event) {
@@ -147,7 +148,7 @@ function get_info(ip)
       });
       event.preventDefault(); // stop the browser following the link
     });
-  
+
     // modify a links to use ajax in the background
     $( "#target_list" ).find( "a" ).click (function (event) {
       $.ajax({
@@ -155,14 +156,14 @@ function get_info(ip)
         url: this.href,
       });
       event.preventDefault(); // stop the browser following the link
-    });  
-  
+    });
+
     // modify a links to use ajax in the background
     $( "#target_list" ).find( "p.liste" ).click (function (event) {
      var target = $( event.target );
      //console.log("x: " ,target.parent());
      target.parent().find("p.animations").toggle();
-  
+
   // $( "ul" ).click( handler ).find( "ul" ).hide();
 
 //target.val("HIDE ANIMATIONS");
@@ -186,7 +187,7 @@ function create_animlist()
 {
 
 
-  
+
 
 //  console.log("lets make the animlist");
 //  console.log(available_anims);
@@ -226,7 +227,7 @@ function playonall(anim)
 //  console.log(res[1])
 //  console.log("playall called");
 //  console.log(available_pois);
-  for (var ip in available_pois) 
+  for (var ip in available_pois)
   {
     var target = "http://" + ip +"/run/"+res[1];
 //    console.log(target);
@@ -236,14 +237,14 @@ function playonall(anim)
       url: target,
     });
   }
-  
 
 
 
 
 
 
-   
+
+
 
 }
 
@@ -280,7 +281,7 @@ function build_anim_data()
 
     var rgb = bgcol.match(/\d+/g);
 
-  
+
     //console.log(rgb[0] ," ", rgb[1]," ",rgb[2] );
 
 
@@ -289,7 +290,7 @@ function build_anim_data()
 
     anim_content[index_counter] =   parseInt(rgb[0], 16),
     anim_content[index_counter+1] = parseInt(rgb[1], 16),
-    anim_content[index_counter+2] = parseInt(rgb[2], 16)  
+    anim_content[index_counter+2] = parseInt(rgb[2], 16)
     index_counter+=3;
   }
   }
@@ -302,7 +303,7 @@ function build_anim_data()
 function transmit_anim()
 {
   build_anim_data();
-  
+
 
   var formData = new FormData();
 
@@ -310,9 +311,9 @@ function transmit_anim()
   var filename="test.poi";
 
   var test = new Blob([anim_content], { type: "application/octet-stream"});
-  
+
   formData.append("filename", test,filename);
-  
+
   var request = new XMLHttpRequest();
   request.open("POST", "http://10.0.0.14/edit.html");
   request.send(formData);
@@ -339,7 +340,7 @@ var down = false;
 $(document).mousedown(function() {
     down = true;
 }).mouseup(function() {
-    down = false;  
+    down = false;
 });
 
 
@@ -357,11 +358,11 @@ if(down)
   if(rgb[0]==0 && rgb[1]==0 && rgb[2]==0 )
   {
     $(target).css("background-color",$("#color").val());
-  } 
+  }
   else
-  {   
+  {
    $(target).css("background-color","#000000");
-  } 
+  }
 }
 }
 
@@ -371,15 +372,15 @@ function change_color_onclick(target)
 
     color=$(target).css("background-color");
     var rgb = color.match(/\d+/g);
-  
+
     if(rgb[0]==0 && rgb[1]==0 && rgb[2]==0 )
     {
       $(target).css("background-color",$("#color").val());
-    } 
+    }
     else
-    {   
+    {
      $(target).css("background-color","#000000");
-    } 
+    }
 }
 
 
@@ -389,20 +390,20 @@ function change_color_onclick(target)
 var colcount=0;
 function addcolumn()
 {
- 
+
  for(i =0;i<25;i++)
  {
-  
+
   var id="row_"+i+"_col_"+colcount;
 
 
   $( "<td class=\"col_"+colcount+"\" id=\""+id+"\"></td>").appendTo( "#row" + i );
 
- 
+
    $("#"+id).mouseover(function(){
     change_color_mouseover(event.target);
    });
-     
+
    $("#"+id).click(function(){
     change_color_onclick(event.target);
    });
@@ -410,7 +411,7 @@ function addcolumn()
 
  }
  colcount+=1;
- 
+
 }
 
 
@@ -419,7 +420,7 @@ function addcolumn()
 
 
 $().ready(function() {
-   
+
 
 //  $("#targethost").val(window.location.hostname);
   $("#targethost").val("10.0.0.14");
@@ -427,11 +428,11 @@ $().ready(function() {
   $( "#targetrefreshbutton").click (function (event) {
    target=$("#targethost").val();
    load_animations(target);
-  
+
   });
 
 
-  // exec stuff here once document is loaded  
+  // exec stuff here once document is loaded
   target=$("#targethost").val();
   // load_animations("http://"+target);
 
@@ -442,7 +443,7 @@ $().ready(function() {
   $( "#scan").click (function (event) {
     $("#loading").show();
     scan_iprange(target);
-    $( "#scancontent").remove();
+    $( "#scancontent").hide();
    });
 
 
@@ -456,7 +457,7 @@ $().ready(function() {
     $( "#addcolumn").click (function (event) {
       addcolumn();
         });
-   
+
 
 
 

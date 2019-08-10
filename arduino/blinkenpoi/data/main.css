@@ -1,3 +1,6 @@
+body{
+  background: #1f253d;
+}
 center {
     width: 420px;
     max-width: 100%;
@@ -7,7 +10,7 @@ center {
 }
 
 header {
-    background-color: #00878F;
+    background: #11a8ab;
     color: white;
     padding: 6px;
     font-family: 'Roboto', sans-serif;
@@ -21,10 +24,20 @@ h1 {
     font-size: 32;
 }
 
-center>div {
+h4{
+  display: block;
+  line-height: 60px;
+  margin: 0;
+  text-align: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #FFF;
+}
+
+/* center>div {
     padding: 24px 10px 10px 10px;
     box-shadow: 1px 1px 5px #555555;
-}
+} */
 
 table {
     margin: 0px 24px 0px 12px;
@@ -40,21 +53,26 @@ tr {
 }
 
 .button {
-    text-decoration: none;
-    border: none;
-    color: white;
-    background-color: #00878F;
-    padding: 6px 24px;
-    font-size: 16px;
-    cursor: pointer;
-    box-shadow: 1px 1px 6px #555;
-    outline: none;
-    margin: 12px auto 0px auto;
-    display: inline-block;
+  display: block;
+  width: 175px;
+  line-height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 auto;
+      margin-top: 0px;
+      margin-bottom: 10px;
+  border-radius: 5px;
+  -webkit-transition: background .3s;
+  transition: background .3s;
+  background: #11a8ab;
+  border: none;
+  color:#FFF;
 }
-
 .button:hover {
     box-shadow: 1px 1px 3px #444;
+    background: #0F9295;
+
 }
 
 input[type=range] {
@@ -137,12 +155,18 @@ p.animations {
     background-color:red;
     margin:4px;
     padding:4px;
-    /*display:inline;*/  
+    /*display:inline;*/
 }
 p.animations a {
  display:block;
 }
-
+.section{
+  margin-bottom: 25px;
+  background: #394264;
+  border-radius: 5px;
+  color: #FFF;
+  padding-bottom: 20px;
+}
 #animaker {
  border:none;
  table-layout: fixed;
@@ -155,4 +179,133 @@ p.animations a {
     width:10px;
     height:10px;
     background-color: black;
+}
+#loading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+#loading-animation{
+  width: 100%;
+  margin-bottom: 30px;
+}
+.wifi-symbol {
+  display: none;
+}
+
+.wifi-symbol [foo], .wifi-symbol {
+  position: relative;
+  top: -75px;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  left: 75px;
+  -ms-transform: rotate(-45deg) translate(-100px);
+  -moz-transform: rotate(-45deg) translate(-100px);
+  -o-transform: rotate(-45deg) translate(-100px);
+  -webkit-transform: rotate(-45deg) translate(-100px);
+  transform: rotate(-45deg) translate(-100px);
+}
+
+.wifi-symbol .wifi-circle {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  display: block;
+  width: 100%;
+  height: 100%;
+  font-size: 14,.42857px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-color: #00A9C2;
+  border-style: solid;
+  border-width: 1em 1em 0 0;
+  -webkit-border-radius: 0 100% 0 0;
+  border-radius: 0 100% 0 0;
+  opacity: 0;
+  -o-animation: wifianimation 2s infinite;
+  -moz-animation: wifianimation 2s infinite;
+  -webkit-animation: wifianimation 2s infinite;
+  animation: wifianimation 2s infinite;
+}
+
+.wifi-symbol .wifi-circle.first {
+  -o-animation-delay: 800ms;
+  -moz-animation-delay: 800ms;
+  -webkit-animation-delay: 800ms;
+  animation-delay: 800ms;
+}
+
+.wifi-symbol .wifi-circle.second {
+  width: 5em;
+  height: 5em;
+  -o-animation-delay: 400ms;
+  -moz-animation-delay: 400ms;
+  -webkit-animation-delay: 400ms;
+  animation-delay: 400ms;
+}
+
+.wifi-symbol .wifi-circle.third {
+  width: 3em;
+  height: 3em;
+}
+
+.wifi-symbol .wifi-circle.fourth {
+  width: 1em;
+  height: 1em;
+  opacity: 1;
+  background-color: #00A9C2;
+  -o-animation: none;
+  -moz-animation: none;
+  -webkit-animation: none;
+  animation: none;
+}
+
+@-o-keyframes wifianimation
+{
+  0% {
+    opacity: 0.4;
+  }
+  5% {
+    opactiy: 1;
+  }
+  6% {
+    opactiy: 0.1;
+  }
+  100% {
+    opactiy: 0.1;
+  }
+}
+
+@-moz-keyframes wifianimation
+{
+  0% {
+    opacity: 0.4;
+  }
+  5% {
+    opactiy: 1;
+  }
+  6% {
+    opactiy: 0.1;
+  }
+  100% {
+    opactiy: 0.1;
+  }
+}
+
+@-webkit-keyframes wifianimation
+{
+  0% {
+    opacity: 0.4;
+  }
+  5% {
+    opactiy: 1;
+  }
+  6% {
+    opactiy: 0.1;
+  }
+  100% {
+    opactiy: 0.1;
+  }
 }

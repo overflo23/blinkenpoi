@@ -1,0 +1,7 @@
+{ "version":"1",
+  "name":"test",
+  "ip":"1.2.3.4",
+  "animations":
+    {"test":1,
+     "EOF":"0" }
+  }
