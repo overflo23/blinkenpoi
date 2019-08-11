@@ -283,13 +283,20 @@ function build_anim_data()
   
     //console.log(rgb[0] ," ", rgb[1]," ",rgb[2] );
 
+/*
+    var r = parseInt(rgb[0], 16);
+    var g = parseInt(rgb[1], 16);
+    var b = parseInt(rgb[2], 16);
 
+    console.log("r: " , rgb[0] );
+    console.log("g: " , rgb[1] );
+    console.log("b: " , rgb[2] );
+    console.log("---" );
+*/
 
-
-
-    anim_content[index_counter] =   parseInt(rgb[0], 16),
-    anim_content[index_counter+1] = parseInt(rgb[1], 16),
-    anim_content[index_counter+2] = parseInt(rgb[2], 16)  
+    anim_content[index_counter] =   rgb[0];
+    anim_content[index_counter+1] = rgb[1];
+    anim_content[index_counter+2] = rgb[2];  
     index_counter+=3;
   }
   }
@@ -306,15 +313,19 @@ function transmit_anim()
 
   var formData = new FormData();
 
-  // JavaScript file-like object
-  var filename="test.poi";
+
 
   var test = new Blob([anim_content], { type: "application/octet-stream"});
   
+  var filename=$("#filename").val()+".poi";
   formData.append("filename", test,filename);
   
+
+  var target=$("#targethost").val();
+  
+
   var request = new XMLHttpRequest();
-  request.open("POST", "http://10.0.0.14/edit.html");
+  request.open("POST", "http://"+target+"/edit.html");
   request.send(formData);
 
 
@@ -386,7 +397,7 @@ function change_color_onclick(target)
 
 
 // adds columns to the editor
-var colcount=0;
+var colcount=1;
 function addcolumn()
 {
  
@@ -457,6 +468,26 @@ $().ready(function() {
       addcolumn();
         });
    
+
+
+// test shit
+
+$('#bgcolor').on('input',
+    function()
+    {
+        console.log($(this).val());
+    }
+);
+
+
+$(".col_0").mouseover(function(){
+  change_color_mouseover(event.target);
+ });
+   
+ $(".col_0").click(function(){
+  change_color_onclick(event.target);
+ });
+
 
 
 
