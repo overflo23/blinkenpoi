@@ -2,6 +2,7 @@
   "name":"test",
   "ip":"1.2.3.4",
   "animations":
-    {"test":1,
+  {"test":1,
+    "test2":1,
      "EOF":"0" }
   }

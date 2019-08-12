@@ -127,19 +127,25 @@ ul#target_list {
   margin-block-start: 0px;
   padding: 0px;
 }
-
-
-
 ul#target_list li {
+	margin: 0;
+	padding: 10px 0;
+	display: flex;
+	border-bottom: 1px solid #959595;
+	margin-bottom: 10px !important;
+}
+ul#target_list li div {
     margin:0;
     padding:0;
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
 ul#target_list li p {
     display:inline-block;
-    padding: 5px;
+    padding: 5px 0px;
     margin:0;
 }
 
@@ -158,6 +164,8 @@ div.ip {
 div.liste {
     background-color:lightskyblue;
     border:1px solid black;
+    display: flex;
+    flex-direction: column;
 }
 
 div.animations {
@@ -267,14 +275,14 @@ div.animations a {
   position: absolute;
   width: 15%;
   height: 105%;
-  background: #00FF18;
+  background: #000;
   box-shadow: 3px 3px 10px rgba(119, 119, 119, 0.5);
   border: 1px solid #4aff1e;
   padding-top: 5%;
 }
 .rightbox {
   float: right;
-  width: 60%;
+  width: 600px;
   height: 100%;
   margin-left: 160px;
 }
@@ -285,6 +293,12 @@ nav svg {
 }
 nav .nav-element{
   width: 100%;
+}
+.nav-text{
+  color:#FFF;
+}
+#animator .nav-text{
+  margin-top: -33px;
 }
 #poi-animations {
   width: 150px;
@@ -394,6 +408,23 @@ nav .nav-element{
   justify-content: center;
   align-items: center;
 }
+.animation-name{
+  display: flex;
+  justify-content: left;
+  flex-direction: row;
+  align-items: center;
+}
+.animation-name .name-label{
+  margin-right: 10px;
+}
+.animaker-container{
+  width: 500px;
+}
+
+#painter{
+  display: flex;
+}
+
 /* backgroundanimation */
 @-webkit-keyframes BackgroundAnimation {
    0%{background-position:19% 0%}

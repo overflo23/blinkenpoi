@@ -77,19 +77,29 @@ function scan_iprange(ip)
 
 
 }
-
+function toggleAnimationlist(e){
+  console.log(e);
+  if(e.parentNode.childNodes[1].style.display=="block"){
+    e.parentNode.childNodes[1].style.display="none";
+    e.textContent=" Animations ▼"
+  }else{
+    e.parentNode.childNodes[1].style.display="block";
+    e.textContent="Animations ▲"
+  }
+}
 
 function add_stick_to_list(data,ip)
 {
     // load list from blinkenpoi
     var items = [];
 
-    info_item = "<div class='name col-2'>"+data["name"]+
+    info_item = "<div class='col-1'><input type='checkbox' id='"+data["ip"]+"' />"+
+                "</div><div class='name col-2'>"+data["name"]+
                 "</div> <div class='version col-2'>"+
-                data["version"]+"</div> <div class='ip col-2'>"+
+                data["version"]+"</div> <div class='ip col-3'>"+
                 data["ip"]+
-                "</div> <div class='liste col-6'>"+
-                "<button onclick='console.log(this.parentNode.childNodes[1].style.display=\"block\")' class='toggle-animations'> TOGGLE ANIMATIONS</button>"+
+                "</div> <div class='liste col-4'>"+
+                "<button onclick='toggleAnimationlist(this)' class='toggle-animations'> Animations &#9660;</button>"+
                 "<div style='display:none' class='animations'> ";
 
     $.each(data["animations"], function(key,val){
@@ -290,13 +300,20 @@ function build_anim_data()
 
     //console.log(rgb[0] ," ", rgb[1]," ",rgb[2] );
 
+/*
+    var r = parseInt(rgb[0], 16);
+    var g = parseInt(rgb[1], 16);
+    var b = parseInt(rgb[2], 16);
 
+    console.log("r: " , rgb[0] );
+    console.log("g: " , rgb[1] );
+    console.log("b: " , rgb[2] );
+    console.log("---" );
+*/
 
-
-
-    anim_content[index_counter] =   parseInt(rgb[0], 16),
-    anim_content[index_counter+1] = parseInt(rgb[1], 16),
-    anim_content[index_counter+2] = parseInt(rgb[2], 16)
+    anim_content[index_counter] =   rgb[0];
+    anim_content[index_counter+1] = rgb[1];
+    anim_content[index_counter+2] = rgb[2];
     index_counter+=3;
   }
   }
@@ -313,15 +330,19 @@ function transmit_anim()
 
   var formData = new FormData();
 
-  // JavaScript file-like object
-  var filename="test.poi";
+
 
   var test = new Blob([anim_content], { type: "application/octet-stream"});
 
+  var filename=$("#filename").val()+".poi";
   formData.append("filename", test,filename);
 
+
+  var target=$("#targethost").val();
+
+
   var request = new XMLHttpRequest();
-  request.open("POST", "http://10.0.0.14/edit.html");
+  request.open("POST", "http://"+target+"/edit.html");
   request.send(formData);
 
 
@@ -393,7 +414,7 @@ function change_color_onclick(target)
 
 
 // adds columns to the editor
-var colcount=0;
+var colcount=1;
 function addcolumn()
 {
 
@@ -460,16 +481,39 @@ $().ready(function() {
    $( "#addcolumn").click (function (event) {
       addcolumn();
         });
-  // nav menu
-  $("#settings").click(e=>{
-    $(".settings").show();
-    $(".animator").hide();
-  })
-  $("#animator").click(e=>{
-    $(".animator").show();
-    $(".settings").hide();
-  })
-  $(".toggle-animations").click(e=>{
-    console.log("click");
-  })
+
+
+
+// test shit
+
+$('#bgcolor').on('input',
+    function()
+    {
+        console.log($(this).val());
+    }
+);
+
+
+$(".col_0").mouseover(function(){
+  change_color_mouseover(event.target);
+ });
+
+ $(".col_0").click(function(){
+  change_color_onclick(event.target);
+ });
+
+ // nav menu
+ $("#settings").click(e=>{
+   $(".settings").show();
+   $(".animator").hide();
+ })
+ $("#animator").click(e=>{
+   $(".animator").show();
+   $(".settings").hide();
+ })
+ $(".toggle-animations").click(e=>{
+   console.log("click");
+ })
+
+
 });
