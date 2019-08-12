@@ -419,6 +419,7 @@ nav .nav-element{
 }
 .animaker-container{
   width: 500px;
+  max-width: 100%;
 }
 
 #painter{
@@ -544,3 +545,83 @@ nav .nav-element{
     transform: rotate(1080deg) scale(1) translate(0, 0);
   }
 }
+
+/* // Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) {
+  .circle-multiple {
+    margin-top: 0px;
+  }
+  .circle,
+  .circle-multiple {
+      height: 50px;
+      width: 50px;
+  }
+  .rightbox,
+  .leftbox {
+    position: relative;
+    float: none;
+    margin-left: 0px;
+    width: 100%;
+    top:0;
+    left: 0;
+    padding: 0;
+  }
+  .section {
+    margin-bottom: 10px;
+  }
+  nav{
+    display: flex;
+  }
+  nav svg {
+    max-width: 45px;
+    margin: auto;
+    height: 50px;
+  }
+  #poi-animations {
+    width: 99px;
+    height: 85px;
+    max-width: 100%;
+    margin-top: -12px;
+  }
+  #animator .nav-text {
+	   margin-top: -23px;
+  }
+  #content{
+    flex-direction: column;
+  }
+  #scancontent, #targethostcontent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    flex-direction: column;
+  }
+  #painter,
+  .animation-name{
+    flex-direction: column;
+  }
+  .animaker-container{
+    padding: 0px;
+  }
+  header.section{
+    margin: 0px;
+    padding: 0px;
+  }
+  .circle-animation-container {
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
+  ul#target_list li div{
+    font-size: 0.8rem;
+  }
+
+}
+
+/* // Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {  }
+
+/* // Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {  }
+
+/* // Large devices (desktops, less than 1200px) */
+@media (max-width: 1199.98px) {  }
