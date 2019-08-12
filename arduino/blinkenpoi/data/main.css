@@ -252,7 +252,7 @@ div.animations a {
   max-width: 100%;
 }
 .section{
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   padding-bottom: 20px;
   position: relative;
   padding: 15px;
@@ -425,7 +425,59 @@ nav .nav-element{
 #painter{
   display: flex;
 }
-
+.anim_masstargets{
+  list-style: none;
+  text-align: left;
+  margin: 0px;
+  padding: 0px;
+}
+.animations a,
+.anim_masstargets li{
+  padding: 10px;
+}
+.animations a,
+.anim_masstargets li a{
+  color: #FFF;
+  text-decoration: none;
+}
+.anim_masstargets li a:hover{
+  text-decoration: underline;
+}
+.animations a:nth-child(odd),
+.anim_masstargets li:nth-child(odd) {
+    background-color: #686868;
+}
+.animations a:nth-child(even),
+.anim_masstargets li:nth-child(even) {
+    background-color: #32323ac7;
+}
+#color {
+    border: none;
+    padding: 10px;
+    width: 87px;
+    text-align: center;
+}
+#animationlist:before, #animationlist:after {
+	content: '';
+	position: absolute;
+	left: -2px;
+	top: -2px;
+	background: linear-gradient(45deg, #fb0094, #0000ff, #00ff00,#ffff00, #ff0000, #fb0094,
+		#0000ff, #00ff00,#ffff00, #ff0000);
+	background-size: 200%;
+	width: calc(100% + 4px);
+	height: calc(100% + 4px);
+	z-index: -1;
+	animation: steam 50s linear infinite;
+}
+#animationlist:after {
+	filter: blur(50px);
+}
+#animationlist{
+  	background: linear-gradient(0deg, #000, #272727);
+    position: relative;
+    z-index: 2;
+}
 /* backgroundanimation */
 @-webkit-keyframes BackgroundAnimation {
    0%{background-position:19% 0%}
@@ -545,6 +597,20 @@ nav .nav-element{
     transform: rotate(1080deg) scale(1) translate(0, 0);
   }
 }
+
+
+@keyframes steam {
+	0% {
+		background-position: 0 0;
+	}
+	50% {
+		background-position: 200% 0;
+	}
+	100% {
+		background-position: 0 0;
+	}
+}
+
 
 /* // Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) {

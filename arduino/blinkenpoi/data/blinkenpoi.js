@@ -13,6 +13,7 @@ function load_animations(ip)
 
 
     add_stick_to_list(data,ip);
+    create_animlist();
 
 /*
     // load list form blinkenpoi
@@ -210,7 +211,7 @@ function create_animlist()
 
   var items = [];
   $.each( available_anims, function( key, val ) {
-    items.push( "<li><a href=\"#"+key + "\">"+key+"</a></li>" );
+    items.push( "<li class='animation row'><input type='checkbox' class='col-2' id='"+key+"'/><a class='col-10' href=\"#"+key + "\">"+key+"</a></li>" );
   });
 
   // append entries to webinterface
@@ -501,7 +502,6 @@ $(".col_0").mouseover(function(){
  $(".col_0").click(function(){
   change_color_onclick(event.target);
  });
-
  // nav menu
  $("#settings").click(e=>{
    $(".settings").show();
