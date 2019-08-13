@@ -62,7 +62,7 @@ function scan_iprange(ip)
   var myRegexp = /([0-9]+)\.([0-9]+)\.([0-9]+)\.([0-9]+)/g;
   var match = myRegexp.exec(ip);
   targetIPs=[];
-  for(i =0;i<15;i++)
+  for(i =0;i<255;i++)
   {
    targetip=match[1]+"."+match[2]+"."+match[3]+"."+i;
    targetIPs.push(targetip);
@@ -82,10 +82,10 @@ function toggleAnimationlist(e){
   console.log(e);
   if(e.parentNode.childNodes[1].style.display=="block"){
     e.parentNode.childNodes[1].style.display="none";
-    e.textContent=" Animations ▼"
+    e.textContent = "Show";
   }else{
     e.parentNode.childNodes[1].style.display="block";
-    e.textContent="Animations ▲"
+    e.textContent = "Hide";
   }
 }
 
@@ -94,18 +94,18 @@ function add_stick_to_list(data,ip)
     // load list from blinkenpoi
     var items = [];
 
-    info_item = "<div class='col-1'><input type='checkbox' id='"+data["ip"]+"' />"+
+    info_item = "<div class='col-1'><input type='checkbox' checked='checked' id='"+data["ip"]+"' />"+
                 "</div><div class='name col-2'>"+data["name"]+
                 "</div> <div class='version col-2'>"+
                 data["version"]+"</div> <div class='ip col-3'>"+
                 data["ip"]+
                 "</div> <div class='liste col-4'>"+
-                "<button onclick='toggleAnimationlist(this)' class='toggle-animations'> Animations &#9660;</button>"+
+                "<button onclick='toggleAnimationlist(this)' class='toggle-animations'>Show</button>"+
                 "<div style='display:none' class='animations'> ";
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<a href='http://"+ip+"/run/"+key+"'> "+key+" ("+ (val/25) +")</a>";
+      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a href='http://"+ data["ip"] +"/animations/"+key+"'>DOWNLOAD</a></p>";
 
       // add to global anim list
       available_anims[key]=1;
@@ -114,14 +114,65 @@ function add_stick_to_list(data,ip)
     info_item += "</div></div>";
 
 
+
     items.push(info_item);
     available_pois[data["ip"]]=data;
 
 
+   selector = data["ip"];
+   selector = selector.replace(/\./g,'');
+
   // append entries to webinterface
     $( "<li/>", {
+      class: selector,
       html: items.join( "" )
     }).appendTo( "#target_list" );
+
+
+//hier JS einfuegen
+
+
+
+    // modify a links to use ajax in the background
+    $( "#target_list li."+selector ).find( "a.runanim" ).click (function (event) {
+      $.ajax({
+        type: "GET", // or GET
+        url: this.href,
+      });
+      event.preventDefault(); // stop the browser following the link
+    });
+
+
+/*
+    // modify a links to use ajax in the background
+    $( "#target_list" ).find( "div.liste" ).click (function (event) {
+     var target = $( event.target );
+     //console.log("x: " ,target.parent());
+     target.parent().find("div.animations").toggle();
+
+  // $( "ul" ).click( handler ).find( "ul" ).hide();
+
+//target.val("HIDE ANIMATIONS");
+     console.log("click");
+
+
+     event.preventDefault(); // stop the browser following the link
+    });
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
@@ -166,29 +217,7 @@ function get_info(ip)
       event.preventDefault(); // stop the browser following the link
     });
 
-    // modify a links to use ajax in the background
-    $( "#target_list" ).find( "a" ).click (function (event) {
-      $.ajax({
-        type: "GET", // or GET
-        url: this.href,
-      });
-      event.preventDefault(); // stop the browser following the link
-    });
 
-    // modify a links to use ajax in the background
-    $( "#target_list" ).find( "div.liste" ).click (function (event) {
-     var target = $( event.target );
-     //console.log("x: " ,target.parent());
-     target.parent().find("div.animations").toggle();
-
-  // $( "ul" ).click( handler ).find( "ul" ).hide();
-
-//target.val("HIDE ANIMATIONS");
-     console.log("click");
-
-
-     event.preventDefault(); // stop the browser following the link
-    });
   }
 
 
@@ -450,19 +479,34 @@ function addcolumn()
 $().ready(function() {
 
 
- $("#targethost").val(window.location.hostname+":"+window.location.port);
-  // $("#targethost").val("10.0.0.14");
+ // stuff in here is executed once document is loaded. binds events to various buttons, loads content via json ans so on..
 
-  $( "#targetrefreshbutton").click (function (event) {
+
+
+
+
+if(window.location.port)
+{
+ $("#targethost").val(window.location.hostname+":"+window.location.port);
+}
+else
+{
+  $("#targethost").val(window.location.hostname);
+}
+ 
+  target=$("#targethost").val();
+
+  // auto laod animations on first html site access
+  load_animations(target);
+
+
+
+ $( "#targetrefreshbutton").click (function (event) {
    target=$("#targethost").val();
    load_animations(target);
 
   });
 
-
-  // exec stuff here once document is loaded
-  target=$("#targethost").val();
-  // load_animations("http://"+target);
 
 
 
@@ -484,36 +528,40 @@ $().ready(function() {
         });
 
 
-
-// test shit
-
+/*
 $('#bgcolor').on('input',
     function()
     {
         console.log($(this).val());
     }
 );
+*/
 
 
-$(".col_0").mouseover(function(){
-  change_color_mouseover(event.target);
- });
+  $(".col_0").mouseover(function(){
+    change_color_mouseover(event.target);
+  });
 
- $(".col_0").click(function(){
-  change_color_onclick(event.target);
- });
+  $(".col_0").click(function(){
+   change_color_onclick(event.target);
+  });
  // nav menu
+
  $("#settings").click(e=>{
    $(".settings").show();
    $(".animator").hide();
  })
+
  $("#animator").click(e=>{
    $(".animator").show();
    $(".settings").hide();
  })
+
+
+/*
  $(".toggle-animations").click(e=>{
    console.log("click");
  })
-
+*/
 
 });

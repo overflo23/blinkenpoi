@@ -1,8 +1,1 @@
-{ "version":"1",
-  "name":"test",
-  "ip":"1.2.3.4",
-  "animations":
-  {"test":1,
-    "test2":1,
-     "EOF":"0" }
-  }
+{ "version":0.1, "name":"TESTDUMMY", "ip":"192.168.43.59","animations": { "colorflower.poi":"2250", "nyan.poi":"2250", "simple_rainbow.poi":"75", "stars.poi":"1500",  "EOF":"0" } }
