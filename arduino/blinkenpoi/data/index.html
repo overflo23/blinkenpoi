@@ -19,12 +19,6 @@ website todo
  DESIGN nice with CSS
   sections:
    - add remote stick to list (insert ip)
-   - automatically add current active stick to list
-   - scan network for more sticks (Class C)
-   - play animations on all hosts in list
-   - editor fuer animationen
-   - animationen direkt runterladen als .tek
-   - animationen direkt HOCHLADEN an target ip aus inputfeld
    - animationen an alle hosts in liste hochladen
 
 
@@ -265,21 +259,24 @@ website todo
                 </ul>
               </div>
               <div class="section">
-                <h4>Animations</h4>
+                <h4>Play Animations on selected pois</h4>
                 <div id="animationlist"></div>
               </div>
             </div>
             <div class="animator">
               <div class="section">
                 <h4>Upload Animation</h4>
-                <form action="http://10.0.0.14/edit.html" method="post" enctype="multipart/form-data" style="margin: 0px auto 8px auto" >
+
+                  <div class="name-label">Target for upload: </div>
+                  <input type="text" name="animationtarget" id="animationtarget" value="" />
+
+                <form action="" id="uploadform" method="post" enctype="multipart/form-data" style="margin: 0px auto 8px auto" >
                     <input type="file" name="Choose file" accept=".poi">
-                    <input class="button" type="submit" value="Upload" name="submit">
+                    <input class="button" id="uploadbutton" type="submit" value="Upload" name="submit">
                 </form>
               </div>
               <div class="section">
                 <h4>Create Animation</h4>
-                <div class="animation-name">
                   <div class="name-label">Name: </div>
                   <input type="text" name="filename" id="filename" value="animation" />
                   <input class="button" type="button" id="transmit_anim" value="Send Data to poi" name="Send Data">
@@ -316,7 +313,8 @@ website todo
                   </div>
                   <div class="animator-actions">
                     <input class="button" type="button" id="addcolumn" value="Add Column" name="Add Column">
-                    <input class="jscolor {hash:true}" name="color" id="color" value="#00FF00" />
+                    <button class="jscolor {value:'00ff00'}" name="color" id="color" ></button>
+
                   </div>
 
                 </div>

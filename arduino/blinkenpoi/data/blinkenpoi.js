@@ -1,6 +1,6 @@
 // we store availabe poi data globally.
 available_pois=[];
-available_anims={};
+available_anims=[];
 scanner_counter=0;
 
 
@@ -108,7 +108,9 @@ function add_stick_to_list(data,ip)
       info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a href='http://"+ data["ip"] +"/animations/"+key+"'>DOWNLOAD</a></p>";
 
       // add to global anim list
-      available_anims[key]=1;
+available_anims.push(key);
+
+//      available_anims[key]=1;
 
     })
     info_item += "</div></div>";
@@ -183,8 +185,6 @@ function get_info(ip)
   //$("#info").html("Currently scanning: " + targeturl);
   var xqrc = $.getJSON( "http://"+ip+"/get_info", function( data ) {
     add_stick_to_list(data,ip);
-
-
   });
 
 
@@ -194,14 +194,16 @@ function get_info(ip)
   xqrc.always(function() {
     scanner_counter+=1;
     console.log(scanner_counter);
-    if(scanner_counter==3)
+create_animlist();
+
+    if(scanner_counter==254)
     {
      //scanner_counter=0;
     //scan is done here
 
     console.log("scanning done");
 
-    create_animlist();
+//    create_animlist();
 
 
     // laoding verstecken
@@ -235,13 +237,24 @@ function create_animlist()
 
 
 
-//  console.log("lets make the animlist");
-//  console.log(available_anims);
+  console.log("lets make the animlist");
+  console.log(available_anims);
+
+const unique = (value, index, self) => {
+    return self.indexOf(value) === index;
+}
+
+ available_anims = available_anims.filter(unique);
+  available_anims.sort();
 
   var items = [];
   $.each( available_anims, function( key, val ) {
-    items.push( "<li class='animation row'><input type='checkbox' class='col-2' id='"+key+"'/><a class='col-10' href=\"#"+key + "\">"+key+"</a></li>" );
+    items.push( "<li class='animation row'><a class='col-10' href=\"#"+val + "\">"+val+"</a></li>" );
   });
+
+
+// clear list
+$("#animationlist").empty();
 
   // append entries to webinterface
   $( "<ul/>", {
@@ -273,6 +286,10 @@ function playonall(anim)
 //  console.log(res[1])
 //  console.log("playall called");
 //  console.log(available_pois);
+
+  // hier sollten wir as HMTL parsen und checkboxen ansehen.
+  // die gecheckten werden beliefert,d er rest nicht
+
   for (var ip in available_pois)
   {
     var target = "http://" + ip +"/run/"+res[1];
@@ -368,8 +385,7 @@ function transmit_anim()
   formData.append("filename", test,filename);
 
 
-  var target=$("#targethost").val();
-
+  var target=$("#animationtarget").val();
 
   var request = new XMLHttpRequest();
   request.open("POST", "http://"+target+"/edit.html");
@@ -412,9 +428,11 @@ if(down)
   color=$(target).css("background-color");
   var rgb = color.match(/\d+/g);
 
+
+
   if(rgb[0]==0 && rgb[1]==0 && rgb[2]==0 )
   {
-    $(target).css("background-color",$("#color").val());
+    $(target).css("background-color",$("#color").css("background-color"));
   }
   else
   {
@@ -432,7 +450,7 @@ function change_color_onclick(target)
 
     if(rgb[0]==0 && rgb[1]==0 && rgb[2]==0 )
     {
-      $(target).css("background-color",$("#color").val());
+      $(target).css("background-color",$("#color").css("background-color"));
     }
     else
     {
@@ -496,6 +514,11 @@ else
  
   target=$("#targethost").val();
 
+
+ // fill target for animation upload
+  $("#animationtarget").val(target);
+
+
   // auto laod animations on first html site access
   load_animations(target);
 
@@ -506,6 +529,30 @@ else
    load_animations(target);
 
   });
+
+
+ // upload anim file to poi
+ $( "#uploadbutton").click (function (event) {
+   target=$("#animationtarget").val();
+   console.log("uploading to: ", target);
+   $("#uploadform").attr("action", "http://"+target+"/edit.html");
+
+/*
+   var data = $('#uploadform').serialize();
+
+$.ajax({
+  type: "POST",
+  url: "http://"+target+"/edit.html",
+  data: data,
+//  success: success,
+  dataType:"multipart/form-data" 
+});
+
+
+//   $.post("http://"+target+"/edit.html", data);
+   event.preventDefault();
+*/ 
+ });
 
 
 
