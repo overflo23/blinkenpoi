@@ -374,25 +374,32 @@ function transmit_anim()
 {
   build_anim_data();
 
-
   var formData = new FormData();
-
-
-
   var test = new Blob([anim_content], { type: "application/octet-stream"});
 
   var filename=$("#filename").val()+".poi";
   formData.append("filename", test,filename);
-
 
   var target=$("#animationtarget").val();
 
   var request = new XMLHttpRequest();
   request.open("POST", "http://"+target+"/edit.html");
   request.send(formData);
+}
 
 
 
+function download_anim()
+{
+  build_anim_data();
+
+ // var FileSaver = require('file-saver');
+
+  var anim_blob = new Blob([anim_content], { type: "application/octet-stream"});
+  var filename=$("#filename").val()+".poi";
+
+  
+  saveAs(anim_blob, filename);
 
 }
 
@@ -570,6 +577,13 @@ $.ajax({
    $( "#transmit_anim").click (function (event) {
     transmit_anim();
       });
+
+   $( "#download_anim").click (function (event) {
+    download_anim();
+      });
+
+
+
    $( "#addcolumn").click (function (event) {
       addcolumn();
         });
