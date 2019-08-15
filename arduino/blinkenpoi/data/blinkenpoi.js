@@ -1,15 +1,23 @@
 // we store availabe poi data globally.
 available_pois=[];
+
+// list of animations that are available accumulated on all pois
 available_anims=[];
+
+//tbh this is ugly
 scanner_counter=0;
 
+// currently selected pois / checkboxes
 active_ips =[];
 
 
+
+
+
+// get JSON from  poi
+
 function load_animations(ip,firstload=false)
 {
-
-
 
   var xqrc= $.getJSON( "http://"+ip+"/get_info", function( data ) {
 
@@ -25,26 +33,9 @@ function load_animations(ip,firstload=false)
 
     }
 
-    add_stick_to_list(data,ip);
+    add_stick_to_list(data);
     create_animlist();
 
-/*
-    // load list form blinkenpoi
-    var items = [];
-    $.each( data, function( key, val ) {
-      if(key=="EOF") return false;
-      items.push( "<li><a href=\"http://"+ip+ "/run/"  + key + "\">"+key+" ("+ val +")</a></li>" );
-      //available_pois[data["ip"]]["animations"].push(val);
-
-    });
-
-
-  // append entries to webinterface
-    $( "<ul/>", {
-      "class": "local_animation_list",
-      html: items.join( "" )
-    }).appendTo( "#content" );
-*/
   });
 
 
@@ -92,7 +83,7 @@ function scan_iprange(ip)
 
 }
 
-function add_stick_to_list(data,ip)
+function add_stick_to_list(data)
 {
 
   if(available_pois[data["ip"]])
@@ -109,16 +100,16 @@ function add_stick_to_list(data,ip)
 
     info_item = "<div class='col-1'><input class='activate_ip' type='checkbox' checked='checked' value='"+data["ip"]+"' />"+
                 "</div><div class='name col-2'>"+data["name"]+
-                "</div> <div class='version col-2'>"+
-                data["version"]+"</div> <div class='ip col-3'>"+
-                data["ip"]+
+                "</div> <div class='ip col-3'>"+
+                data["ip"]+"</div> <div class='version col-2'>"+
+                data["version"]+
                 "</div> <div class='liste col-4'>"+
-                "<button class='toggle-animations'>Show</button>"+
+                "<button class='toggle-animations'>Show</button></div>"+
                 "<div style='display:none' class='animations'> ";
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Distribute this Animation to all other active Pois'>DIST</a> </p>";
+      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='"+key+"' alt='Distribute this Animation to all other active Pois'>DIST</a> </p>";
 
       // add to global anim list
 available_anims.push(key);
@@ -126,7 +117,7 @@ available_anims.push(key);
 //      available_anims[key]=1;
 
     })
-    info_item += "</div></div>";
+    info_item += "</div>";
 
 
 
@@ -149,15 +140,15 @@ available_anims.push(key);
     // show/hide animations liste 
     $( "#target_list li."+selector ).find( "button.toggle-animations" ).click (function (e) {
   
-     if($(this).parent().find("div.animations").is(":visible"))
+     if($(this).parents().eq(2).find("div.animations").is(":visible"))
      {
         $(this).html("Show");
-        $(this).parent().find("div.animations").hide();
+        $(this).parents().eq(2).find("div.animations").hide();
      } 
      else
      {
         $(this).html("Hide");
-        $(this).parent().find("div.animations").show();
+        $(this).parents().eq(2).find("div.animations").show();
 
      }
 
@@ -177,7 +168,11 @@ available_anims.push(key);
 
     // attach distribute action to this link 
     $( "#target_list li."+selector ).find( "a.distribute" ).click (function (event) {
-      console.log("We should download the animation from the stick and save it to a BLOB buffer and then go trough the list of active sticks and send the data again.");
+     ip = $( "#target_list li."+selector ).find( "div.ip" ).html();
+     animation=$(this).attr("href");     
+ 
+     distribute_animation(ip,animation);
+
 
       event.preventDefault(); // stop the browser following the link
     });
@@ -200,9 +195,19 @@ available_anims.push(key);
         console.log(active_ips);
 
     });
+}
 
 
+function distribute_animation(ip,animation)
+{
 
+console.log("fetching anim from ip: ", ip ,);
+console.log("anim: ", animation);
+// get animation
+
+// go trough list of ips and skip ip of original address
+
+// send data to other ips with post request
 
 }
 
@@ -211,7 +216,7 @@ function get_info(ip)
 {
   //$("#info").html("Currently scanning: " + targeturl);
   var xqrc = $.getJSON( "http://"+ip+"/get_info", function( data ) {
-    add_stick_to_list(data,ip);
+    add_stick_to_list(data);
   });
 
 

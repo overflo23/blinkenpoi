@@ -149,17 +149,6 @@ ul#target_list li p {
     margin:0;
 }
 
-div.name {
-    background-color:orange;
-}
-
-div.version {
-    background-color:greenyellow;
-}
-
-div.ip {
-    background-color:blueviolet;
-}
 
 div.liste {
     background-color:lightskyblue;
