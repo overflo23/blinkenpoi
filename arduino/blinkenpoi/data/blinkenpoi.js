@@ -19,6 +19,10 @@ function load_animations(ip,firstload=false)
        $("#targethost").val(data["ip"]);
        $("#animationtarget").val(data["ip"]); 
        $("#ip").val(data["ip"]);
+
+       $("#myip").html(data["ip"]);
+       $("#myhostname").html(data["name"]);
+
     }
 
     add_stick_to_list(data,ip);
