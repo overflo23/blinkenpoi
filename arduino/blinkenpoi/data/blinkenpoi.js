@@ -91,16 +91,6 @@ function scan_iprange(ip)
 
 
 }
-function toggleAnimationlist(e){
-  console.log(e);
-  if(e.parentNode.childNodes[1].style.display=="block"){
-    e.parentNode.childNodes[1].style.display="none";
-    e.textContent = "Show";
-  }else{
-    e.parentNode.childNodes[1].style.display="block";
-    e.textContent = "Hide";
-  }
-}
 
 function add_stick_to_list(data,ip)
 {
@@ -123,12 +113,12 @@ function add_stick_to_list(data,ip)
                 data["version"]+"</div> <div class='ip col-3'>"+
                 data["ip"]+
                 "</div> <div class='liste col-4'>"+
-                "<button onclick='toggleAnimationlist(this)' class='toggle-animations'>Show</button>"+
+                "<button class='toggle-animations'>Show</button>"+
                 "<div style='display:none' class='animations'> ";
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='http://"+ data["ip"] +"/animations/"+key+" alt='Distribute this Animation to all other active Pois'>DIST</a> </p>";
+      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Distribute this Animation to all other active Pois'>DIST</a> </p>";
 
       // add to global anim list
 available_anims.push(key);
@@ -156,6 +146,22 @@ available_anims.push(key);
 
 //hier JS einfuegen
 
+    // show/hide animations liste 
+    $( "#target_list li."+selector ).find( "button.toggle-animations" ).click (function (e) {
+  
+     if($(this).parent().find("div.animations").is(":visible"))
+     {
+        $(this).html("Show");
+        $(this).parent().find("div.animations").hide();
+     } 
+     else
+     {
+        $(this).html("Hide");
+        $(this).parent().find("div.animations").show();
+
+     }
+
+    });
 
 
     // modify a links to use ajax in the background
@@ -194,37 +200,6 @@ available_anims.push(key);
         console.log(active_ips);
 
     });
-
-
-
-/*
-    // modify a links to use ajax in the background
-    $( "#target_list" ).find( "div.liste" ).click (function (event) {
-     var target = $( event.target );
-     //console.log("x: " ,target.parent());
-     target.parent().find("div.animations").toggle();
-
-  // $( "ul" ).click( handler ).find( "ul" ).hide();
-
-//target.val("HIDE ANIMATIONS");
-     console.log("click");
-
-
-     event.preventDefault(); // stop the browser following the link
-    });
-*/
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -395,19 +370,6 @@ function build_anim_data()
     var rgb = bgcol.match(/\d+/g);
 
 
-    //console.log(rgb[0] ," ", rgb[1]," ",rgb[2] );
-
-/*
-    var r = parseInt(rgb[0], 16);
-    var g = parseInt(rgb[1], 16);
-    var b = parseInt(rgb[2], 16);
-
-    console.log("r: " , rgb[0] );
-    console.log("g: " , rgb[1] );
-    console.log("b: " , rgb[2] );
-    console.log("---" );
-*/
-
     anim_content[index_counter] =   rgb[0];
     anim_content[index_counter+1] = rgb[1];
     anim_content[index_counter+2] = rgb[2];
@@ -417,8 +379,10 @@ function build_anim_data()
 
   console.log(anim_content);
 
-
 }
+
+
+// send data to one poi
 
 function transmit_anim()
 {
@@ -438,7 +402,8 @@ function transmit_anim()
 }
 
 
-
+// send data to all active pois
+// TODO implement alarm / confirm that data mitgh be overwritten 
 function mass_transmit_anim()
 {
   build_anim_data();
@@ -462,24 +427,19 @@ function mass_transmit_anim()
 
 
 
-
+// download link at anim  maker
 function download_anim()
 {
   build_anim_data();
-
- // var FileSaver = require('file-saver');
-
   var anim_blob = new Blob([anim_content], { type: "application/octet-stream"});
   var filename=$("#filename").val()+".poi";
-
-  
   saveAs(anim_blob, filename);
 
 }
 
 
 
-
+// helper function
 function hexToRgb(hex) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result ? {
@@ -501,15 +461,13 @@ $(document).mousedown(function() {
 
 
 
-
+// for anim maker
 function change_color_mouseover(target)
 {
 if(down)
 {
   color=$(target).css("background-color");
   var rgb = color.match(/\d+/g);
-
-
 
   if(rgb[0]==0 && rgb[1]==0 && rgb[2]==0 )
   {
@@ -522,7 +480,7 @@ if(down)
 }
 }
 
-
+// for animmaker 
 function change_color_onclick(target)
 {
 
@@ -551,10 +509,7 @@ function addcolumn()
  {
 
   var id="row_"+i+"_col_"+colcount;
-
-
   $( "<td class=\"col_"+colcount+"\" id=\""+id+"\"></td>").appendTo( "#row" + i );
-
 
    $("#"+id).mouseover(function(){
     change_color_mouseover(event.target);
@@ -563,16 +518,18 @@ function addcolumn()
    $("#"+id).click(function(){
     change_color_onclick(event.target);
    });
-
-
  }
  colcount+=1;
-
 }
 
 
 
 
+
+
+
+
+// run the show!
 
 
 $().ready(function() {
@@ -614,22 +571,10 @@ $().ready(function() {
       target=$("#animationtarget").val();
       console.log("uploading to: ", target);
       $("#uploadform").attr("action", "http://"+target+"/edit.html");
-        /*
-           var data = $('#uploadform').serialize();
-        $.ajax({
-          type: "POST",
-          url: "http://"+target+"/edit.html",
-          data: data,
-          //  success: success,
-          dataType:"multipart/form-data" 
-        });
-        //   $.post("http://"+target+"/edit.html", data);
-        event.preventDefault();
-        */ 
     });
 
 
-    // attach scan function to butotn 
+    // attach scan function to button 
     $( "#scan").click (function (event) {
         $("#loading").show();
         scan_iprange(target);
