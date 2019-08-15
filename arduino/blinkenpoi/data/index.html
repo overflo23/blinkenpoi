@@ -17,16 +17,11 @@
 
 website todo
 
- DESIGN nice with CSS
   sections:
-   - add remote stick to list (insert ip)
    - animationen an alle hosts in liste hochladen
-
 
    javascript:
     - play animation on host sollte xmlhttp machen bis success oder 20 tries.
-    - add host to list sollte sofort den button fuer die liste mit einem javascript action anlegen nciht erst am ende die liste durchgehen
-    -
 
 
 
@@ -166,11 +161,11 @@ website todo
                 <div id="info"></div>
                 <h4>Connect</h4>
                 <div id="targethostcontent">
-                  Targethost: <input type="text" name="targethost" value="" id="targethost" />
+                  Add poi to list (IPv4 address): <input type="text" name="targethost" value="" id="targethost" />
                   <input type="button" value="Refresh" text="Refresh" name="refresh" id="targetrefreshbutton" />
                 </div>
                 <div id="scancontent">
-                   Scan: <input type="text" name="ip" value="10.0.0.0" id="ip" />
+                   Scan Network x.x.x.(0-255) This takes a while : <input type="text" name="ip" value="10.0.0.0" id="ip" />
                    <input type="button" value="Scan" text="Scan" name="scan" id="scan" />
                  </div>
                  <div id="loading" style="display: none">
@@ -248,7 +243,7 @@ website todo
                  </div>
               </div>
               <div class="section">
-                <h4>Connected Poi</h4>
+                <h4>Connected Pois</h4>
                 <ul id="target_list">
                   <li class="list-header row">
                     <p class="col-1">Select</p>
@@ -281,7 +276,8 @@ website todo
                   <div class="name-label">Name: </div>
                   <input type="text" name="filename" id="filename" value="animation" />
                   <input class="button" type="button" id="download_anim" value="Download Animation" name="Download Animation">
-                  <input class="button" type="button" id="transmit_anim" value="Send Data to poi" name="Send Data">
+                  <input class="button" type="button" id="transmit_anim" value="Send Data to poi" >
+                  <input class="button" type="button" id="mass_transmit_anim" value="Send Data to ALL active pois" >
                 </div>
                 <div id="painter">
                   <div class="animaker-container">

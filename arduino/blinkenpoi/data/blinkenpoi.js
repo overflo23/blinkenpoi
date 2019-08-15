@@ -3,14 +3,23 @@ available_pois=[];
 available_anims=[];
 scanner_counter=0;
 
+active_ips =[];
 
-function load_animations(ip)
+
+function load_animations(ip,firstload=false)
 {
+
 
 
   var xqrc= $.getJSON( "http://"+ip+"/get_info", function( data ) {
 
-
+    // this is the data for the local stick
+    if(firstload)
+    {
+       $("#targethost").val(data["ip"]);
+       $("#animationtarget").val(data["ip"]); 
+       $("#ip").val(data["ip"]);
+    }
 
     add_stick_to_list(data,ip);
     create_animlist();
@@ -91,10 +100,20 @@ function toggleAnimationlist(e){
 
 function add_stick_to_list(data,ip)
 {
+
+  if(available_pois[data["ip"]])
+  {
+   console.log("already in list, returning");
+   return;
+  }
+   // add entry to list of active ips, this can be set with the checkboxes..
+   active_ips.push(data["ip"]);
+
+
     // load list from blinkenpoi
     var items = [];
 
-    info_item = "<div class='col-1'><input type='checkbox' checked='checked' id='"+data["ip"]+"' />"+
+    info_item = "<div class='col-1'><input class='activate_ip' type='checkbox' checked='checked' value='"+data["ip"]+"' />"+
                 "</div><div class='name col-2'>"+data["name"]+
                 "</div> <div class='version col-2'>"+
                 data["version"]+"</div> <div class='ip col-3'>"+
@@ -105,7 +124,7 @@ function add_stick_to_list(data,ip)
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a href='http://"+ data["ip"] +"/animations/"+key+"'>DOWNLOAD</a></p>";
+      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='http://"+ data["ip"] +"/animations/"+key+" alt='Distribute this Animation to all other active Pois'>DIST</a> </p>";
 
       // add to global anim list
 available_anims.push(key);
@@ -143,6 +162,35 @@ available_anims.push(key);
       });
       event.preventDefault(); // stop the browser following the link
     });
+
+
+
+    // attach distribute action to this link 
+    $( "#target_list li."+selector ).find( "a.distribute" ).click (function (event) {
+      console.log("We should download the animation from the stick and save it to a BLOB buffer and then go trough the list of active sticks and send the data again.");
+
+      event.preventDefault(); // stop the browser following the link
+    });
+
+
+    // attach distribute action to this link
+    $( "#target_list li."+selector ).find( ".activate_ip" ).change(function (event) {
+        if($(this).is(":checked")) {
+            console.log("add ip to active");
+            active_ips.push($(this).val());
+        }
+        else
+        {   
+            console.log("remove ip from active list");
+            for (i=0;i<active_ips.length;i++)
+            {
+             if(active_ips[i] == $(this).val()) active_ips.splice(i, 1);
+            } 
+        }
+        console.log(active_ips);
+
+    });
+
 
 
 /*
@@ -283,31 +331,29 @@ function playonall(anim)
 {
 
   var res = anim.split("#");
-//  console.log(res[1])
-//  console.log("playall called");
-//  console.log(available_pois);
 
-  // hier sollten wir as HMTL parsen und checkboxen ansehen.
-  // die gecheckten werden beliefert,d er rest nicht
+  // play on all active ips (those with a checkbox selected)
+  active_ips.forEach(function(ip){
+        var target = "http://" + ip +"/run/"+res[1];
+        console.log("playnonall(): " , target);
 
-  for (var ip in available_pois)
-  {
-    var target = "http://" + ip +"/run/"+res[1];
-//    console.log(target);
+        $.ajax({
+         type: "GET", // or GET
+         url: target,
+         timeout: 500,
+         success: function(e){
+           // TODO add animation on list entries green flash
+           console.log("STARTED ON: ", target)
+         },
+         error: function(e){
+           // TODO: add animations on list items RED flash
+           console.log("FAILED ON:", target)
+         },
 
-    $.ajax({
-      type: "GET", // or GET
-      url: target,
+        });
+
+
     });
-  }
-
-
-
-
-
-
-
-
 
 }
 
@@ -386,6 +432,30 @@ function transmit_anim()
   request.open("POST", "http://"+target+"/edit.html");
   request.send(formData);
 }
+
+
+
+function mass_transmit_anim()
+{
+  build_anim_data();
+
+  var formData = new FormData();
+  var test = new Blob([anim_content], { type: "application/octet-stream"});
+
+  var filename=$("#filename").val()+".poi";
+  formData.append("filename", test,filename);
+
+
+ // TODO convert to .ajax, add error and success handlers
+  active_ips.forEach(function(ip){
+   console.log("sending animation data to: ", ip);
+   var request = new XMLHttpRequest();
+   request.open("POST", "http://"+ip+"/edit.html");
+   request.send(formData);
+  });
+}
+
+
 
 
 
@@ -507,122 +577,100 @@ $().ready(function() {
  // stuff in here is executed once document is loaded. binds events to various buttons, loads content via json ans so on..
 
 
+    if(window.location.port)
+    {
+        $("#targethost").val(window.location.hostname+":"+window.location.port);
+    }
+    else
+    {
+        $("#targethost").val(window.location.hostname);
+    }
+
+    target=$("#targethost").val();
 
 
+    // auto laod animations on first html site access
+    load_animations(target,true);
 
-if(window.location.port)
-{
- $("#targethost").val(window.location.hostname+":"+window.location.port);
-}
-else
-{
-  $("#targethost").val(window.location.hostname);
-}
- 
-  target=$("#targethost").val();
-
-
- // fill target for animation upload
-  $("#animationtarget").val(target);
-
-
-  // auto laod animations on first html site access
-  load_animations(target);
-
-
-
- $( "#targetrefreshbutton").click (function (event) {
-   target=$("#targethost").val();
-   load_animations(target);
-
-  });
-
-
- // upload anim file to poi
- $( "#uploadbutton").click (function (event) {
-   target=$("#animationtarget").val();
-   console.log("uploading to: ", target);
-   $("#uploadform").attr("action", "http://"+target+"/edit.html");
-
-/*
-   var data = $('#uploadform').serialize();
-
-$.ajax({
-  type: "POST",
-  url: "http://"+target+"/edit.html",
-  data: data,
-//  success: success,
-  dataType:"multipart/form-data" 
-});
-
-
-//   $.post("http://"+target+"/edit.html", data);
-   event.preventDefault();
-*/ 
- });
+    // fill target for animation upload
+    $("#animationtarget").val(target);
 
 
 
 
-  //console.log(available_pois);
+   // add one specific ip to list
+    $( "#targetrefreshbutton").click (function (event) {
+      target=$("#targethost").val();
+      load_animations(target);
+    });
 
-  $( "#scan").click (function (event) {
-    $("#loading").show();
-    scan_iprange(target);
-    $( "#scancontent").hide();
-   });
+
+     // upload anim file to poi
+    $( "#uploadbutton").click (function (event) {
+      target=$("#animationtarget").val();
+      console.log("uploading to: ", target);
+      $("#uploadform").attr("action", "http://"+target+"/edit.html");
+        /*
+           var data = $('#uploadform').serialize();
+        $.ajax({
+          type: "POST",
+          url: "http://"+target+"/edit.html",
+          data: data,
+          //  success: success,
+          dataType:"multipart/form-data" 
+        });
+        //   $.post("http://"+target+"/edit.html", data);
+        event.preventDefault();
+        */ 
+    });
+
+
+    // attach scan function to butotn 
+    $( "#scan").click (function (event) {
+        $("#loading").show();
+        scan_iprange(target);
+        $("#scancontent").hide();
+    });
 
 
 
    $( "#transmit_anim").click (function (event) {
     transmit_anim();
-      });
+   });
+
+   $( "#mass_transmit_anim").click (function (event) {
+    mass_transmit_anim();
+   });
 
    $( "#download_anim").click (function (event) {
     download_anim();
-      });
-
-
+   });
 
    $( "#addcolumn").click (function (event) {
-      addcolumn();
-        });
+     addcolumn();
+    });
+
+   $(".col_0").mouseover(function(){
+     change_color_mouseover(event.target);
+   });
+
+   $(".col_0").click(function(){
+    change_color_onclick(event.target);
+   });
+ 
+   // nav menu
+
+   $("#settings").click(e=>{
+    $(".settings").show();
+    $(".animator").hide();
+   });
+
+   $("#animator").click(e=>{
+    $(".animator").show();
+    $(".settings").hide();
+   });
 
 
-/*
-$('#bgcolor').on('input',
-    function()
-    {
-        console.log($(this).val());
-    }
-);
-*/
 
-
-  $(".col_0").mouseover(function(){
-    change_color_mouseover(event.target);
-  });
-
-  $(".col_0").click(function(){
-   change_color_onclick(event.target);
-  });
- // nav menu
-
- $("#settings").click(e=>{
-   $(".settings").show();
-   $(".animator").hide();
- })
-
- $("#animator").click(e=>{
-   $(".animator").show();
-   $(".settings").hide();
- })
-
-
-/*
- $(".toggle-animations").click(e=>{
-   console.log("click");
- })
-*/
 
 });
