@@ -33,6 +33,26 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
   }
 
 
+  // remove animation from spiffs
+  if (path.startsWith("/delete/"))
+  {
+   String delete_anim = "/animations/" + path.substring(8);
+   Serial.print("Trying to DELETE animation: "); 
+   Serial.println(delete_anim); 
+   // whatever happens later 200 or 404.. we want to let the client know CORS
+   server.sendHeader("Access-Control-Allow-Origin","*");
+   if(SPIFFS.remove(delete_anim))
+   {
+     Serial.println("Success. file is gone.");
+     server.send(200, "text/plain", "OK");
+     return true;
+   }
+     Serial.println("File not found :(.");   
+    server.send(404, "text/plain", "NOPE");
+    return false;
+  }
+
+
   // receive list of animations
   if (path.startsWith("/get_animations"))
   {
@@ -74,6 +94,8 @@ bool handleFileRead(String path) { // send the right file to the client (if it e
     if (SPIFFS.exists(pathWithGz))                         // If there's a compressed version available
       path += ".gz";                                         // Use the compressed verion
     File file = SPIFFS.open(path, "r");                    // Open the file
+  server.sendHeader("Access-Control-Allow-Origin","*");
+
     size_t sent = server.streamFile(file, contentType);    // Send it to the client
     file.close();                                          // Close the file again
     Serial.println(String("\tSent file: ") + path);
@@ -91,7 +113,9 @@ void handleFileUpload(){ // upload a new file to the SPIFFS
   
   String path;
   if(upload.status == UPLOAD_FILE_START){
-      server.sendHeader("Access-Control-Allow-Origin","*");
+
+
+   server.sendHeader("Access-Control-Allow-Origin","*");
 
     path = upload.filename;
     path = "/animations/"+path;
@@ -109,8 +133,8 @@ void handleFileUpload(){ // upload a new file to the SPIFFS
     if(fsUploadFile) {                                    // If the file was successfully created
       fsUploadFile.close();                               // Close the file again
       Serial.print("handleFileUpload Size: "); Serial.println(upload.totalSize);
-      server.sendHeader("Location","/success.html");      // Redirect the client to the success page
-      server.send(303);
+ //     server.sendHeader("Location","/success.html");      // Redirect the client to the success page
+      server.send(200);
     } else {
       server.send(500, "text/plain", "500: couldn't create file");
     }

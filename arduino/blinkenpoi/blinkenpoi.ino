@@ -1,14 +1,11 @@
 #include <ESP8266WiFi.h>
-//#include <ESP8266WiFiMulti.h>
-//#include <ArduinoOTA.h>
 #include <ESP8266WebServer.h>
 
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 #include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
-
+                                   // NEEDS v5.x !! >6.x will fail to compile
 #include <ESP8266mDNS.h>
 #include <FS.h>
-#include <ArduinoJson.h>
 #include <Adafruit_DotStar.h>
 #include <SPI.h>         
 
@@ -68,22 +65,10 @@ const int button1_pin=2; // D4
 
 String SW_VERSION="0.9";
 
-// TODO
-/*
-
- // html fuer upload von .tek file vom computer
- // html fuer upload von .tek file direkt ueber js
- */
-
-
-//ESP8266WiFiMulti wifiMulti;       // Create an instance of the ESP8266WiFiMulti class, called 'wifiMulti'
 
 ESP8266WebServer server(80);       // Create a webserver object that listens for HTTP request on port 80
-//WebSocketsServer webSocket(81);    // create a websocket server on port 81
 
 File fsUploadFile;                 // a File variable to temporarily store the received file
-
-//const char *password = "";   // The password required to connect to it, leave blank for an open network
 
 
 
@@ -92,25 +77,13 @@ const char *ssid = "Blinkenpoi"; // The name of the Wi-Fi network that will be c
 String STICK_NAME="No. 1";
 
 
-
-
-/*
-const char *OTAName = "Blinkenpoi";           // A name and a password for the OTA service
-const char *OTAPassword = "blinky123";
-*/
-
 const char* mdnsName = "blinkenpoi"; // Domain name for the mDNS responder
 
 
 
 
-//   das ist alles scheisse.
-//  neue button belegung evaluieren
-
-
-
-
-
+//  das ist alles scheisse mit den buttons.
+//  TODO: neue button belegung evaluieren / too late for CCCamp 2019 :(
 
 OneButton button1(button1_pin, true);
 //OneButton button2(button2_pin, false);
@@ -148,9 +121,6 @@ void setup() {
   
   startWiFi();                 // Start a Wi-Fi access point, and try to connect to some given access points. Then wait for either an AP or STA connection
   
- // startOTA();                  // Start the OTA service
-  
-
   startMDNS();                 // Start the mDNS responder
 
   startServer();               // Start a HTTP server with a file read handler and an upload handler
@@ -164,11 +134,8 @@ void setup() {
 void loop() {
 
   checkButtons();
-
+  MDNS.update();
   server.handleClient();                      // run the http server
-  
-  //ArduinoOTA.handle();                        // listen for OTA events
-  
   showAnimation();
   
 

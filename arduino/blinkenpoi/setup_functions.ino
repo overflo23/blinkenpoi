@@ -244,11 +244,18 @@ void startMDNS() { // Start the mDNS responder
   Serial.print("mDNS responder started: http://");
   Serial.print(mdnsName);
   Serial.println(".local");
+
+  MDNS.addService("http", "tcp", 80);
+  
 }
 
 void startServer() { // Start a HTTP server with a file read handler and an upload handler
-  server.on("/edit.html",  HTTP_POST, []() {  // If a POST request is sent to the /edit.html address,
+    server.on("/edit.html",  HTTP_POST, []() {  // If a POST request is sent to the /edit.html address,
+    Serial.println("UPLOAD");
+    server.sendHeader("Access-Control-Allow-Origin","*");
+
     server.send(200, "text/plain", ""); 
+    
   }, handleFileUpload);                       // go to 'handleFileUpload'
 
   server.onNotFound(handleNotFound);          // if someone requests any other file or page, go to function 'handleNotFound'
