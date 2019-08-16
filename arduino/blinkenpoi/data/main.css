@@ -133,6 +133,7 @@ ul#target_list li {
 	display: flex;
 	border-bottom: 1px solid #959595;
 	margin-bottom: 10px !important;
+  flex-wrap: wrap;
 }
 ul#target_list li div {
     margin:0;
@@ -158,7 +159,6 @@ div.liste {
 }
 
 div.animations {
-    background-color:red;
     margin:4px;
     padding:4px;
     /*display:inline;*/
@@ -188,9 +188,9 @@ div.animations a {
 }
 
 .col-4 {
-  -ms-flex: 0 0 33.333333%;
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
+  -ms-flex: 0 0 32.333333%;
+  flex: 0 0 32.333333%;
+  max-width: 32.333333%;
 }
 
 .col-5 {
