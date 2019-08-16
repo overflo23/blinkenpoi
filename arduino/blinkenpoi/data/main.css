@@ -148,6 +148,9 @@ ul#target_list li p {
     display:inline-block;
     padding: 5px 0px;
     margin:0;
+    display: flex;
+    width: 100%;
+    align-items: center;
 }
 
 
@@ -161,10 +164,19 @@ div.liste {
 div.animations {
     margin:4px;
     padding:4px;
+    flex-direction: column;
     /*display:inline;*/
 }
+div.animations img {
+  max-width: 24px;
+  max-height: 24px;
+}
+
 div.animations a {
  display:block;
+ padding: 4px;
+ margin: 0px 10px;
+ display: flex;
 }
 .row{
   display: flex;
@@ -432,11 +444,11 @@ nav .nav-element{
 .anim_masstargets li a:hover{
   text-decoration: underline;
 }
-.animations a:nth-child(odd),
+.animations p:nth-child(odd),
 .anim_masstargets li:nth-child(odd) {
     background-color: #686868;
 }
-.animations a:nth-child(even),
+.animations p:nth-child(even),
 .anim_masstargets li:nth-child(even) {
     background-color: #32323ac7;
 }

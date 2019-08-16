@@ -109,7 +109,7 @@ function add_stick_to_list(data)
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='"+key+"' alt='Distribute this Animation to all other active Pois'>DIST</a> </p>";
+      info_item += "<p><a class='runanim col-6' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download button' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'><img src='icons/download.png' /></a> <a class='distribute button' href='"+key+"' alt='Distribute this Animation to all other active Pois'><img src='icons/dist.png' /></a> </p>";
 
       // add to global anim list
 available_anims.push(key);
