@@ -10,6 +10,8 @@ scanner_counter=0;
 // currently selected pois / checkboxes
 active_ips =[];
 
+// anim content 
+var anim_content = new Uint8Array(1); // the body of the new file...
 
 
 
@@ -169,9 +171,7 @@ available_anims.push(key);
     // attach distribute action to this link
     $( "#target_list li."+selector ).find( "a.distribute" ).click (function (event) {
      event.preventDefault();
-//     ip = $( "#target_list li."+selector ).find( "div.ip" ).html();
      animation=$(this).attr("href");     
- 
      distribute_animation(data["ip"],animation);
 
     });
@@ -226,45 +226,45 @@ jQuery.ajax({
             xhr.responseType= 'blob'
             return xhr;
         },
-        success: function(data){
-            // the animation data is now available in the "data" object
-                console.log(data);
-                anim_content=data;    
-    },
-        error:function(){
-           //TODO implement info box here
-           console.log("Download failed :("); 
-        }
-});
+        success: function(data)
+        {
+         // the animation data is now available in the "data" object
+         var fileReader = new FileReader();
+         fileReader.onload = function(event) 
+         {
+          anim_content = event.target.result;
+            
+          // go trough list of ips and skip ip of original address
+          var formData = new FormData();
+          var test = new Blob([anim_content], { type: "application/octet-stream"});
 
+          formData.append("filename", test,animation);
+          // TODO convert to .ajax, add error and success handlers
+          active_ips.forEach(function(remote_ip)
+          {
+           if(remote_ip == ip)
+           {
+             console.log("skipping distribution for own ip:" , ip);
+             return false;
+           }
+           var target = "http://" + remote_ip +"/edit.html";
+           console.log("sending data to:" , target);
 
-// go trough list of ips and skip ip of original address
+           var request = new XMLHttpRequest();
+           request.open("POST", target);
+           request.send(formData);
+          });
+         };
+        fileReader.readAsArrayBuffer(data);
+    }, // ajax success end
 
+    error:function(){
+     //TODO implement info box here
+     console.log("Download failed :("); 
+    }
+ });
 
-
-  var formData = new FormData();
-  var test = new Blob([anim_content], { type: "application/octet-stream"});
-
-  formData.append("filename", test,animation);
-
-
- // TODO convert to .ajax, add error and success handlers
-  active_ips.forEach(function(remote_ip){
- 
-   if(remote_ip == ip)
-   {
-         console.log("skipping distribution for own ip:" , ip);
-         return false;
-   }
-        var target = "http://" + remote_ip +"/edit.html";
-        console.log("sending data to:" , target);
-
-   var request = new XMLHttpRequest();
-   request.open("POST", target);
-   request.send(formData);
-  });
-
-}
+} // function end
 
 
 function get_info(ip)
@@ -405,7 +405,6 @@ function playonall(anim)
 
 
 
-var anim_content = new Uint8Array(1); // the body of the new file...
 
 
 
