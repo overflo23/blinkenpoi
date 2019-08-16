@@ -109,7 +109,7 @@ function add_stick_to_list(data)
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='"+key+"' alt='Distribute this Animation to all other active Pois'>DIST</a> </p>";
+      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='"+key+"' alt='Distribute this Animation to all other active Pois'>DIST</a> <a class='delete' href='http://"+ data["ip"] +"/delete/"+key+"' alt='Delete this Animation'>DELETE</a></p>";
 
       // add to global anim list
 available_anims.push(key);
@@ -140,15 +140,15 @@ available_anims.push(key);
     // show/hide animations liste 
     $( "#target_list li."+selector ).find( "button.toggle-animations" ).click (function (e) {
   
-     if($(this).parents().eq(2).find("div.animations").is(":visible"))
+     if($(this).parents().eq(1).find("div.animations").is(":visible"))
      {
         $(this).html("Show");
-        $(this).parents().eq(2).find("div.animations").hide();
+        $(this).parents().eq(1).find("div.animations").hide();
      } 
      else
      {
         $(this).html("Hide");
-        $(this).parents().eq(2).find("div.animations").show();
+        $(this).parents().eq(1).find("div.animations").show();
 
      }
 
@@ -168,17 +168,28 @@ available_anims.push(key);
 
     // attach distribute action to this link 
     $( "#target_list li."+selector ).find( "a.distribute" ).click (function (event) {
-     ip = $( "#target_list li."+selector ).find( "div.ip" ).html();
+     event.preventDefault();
+//     ip = $( "#target_list li."+selector ).find( "div.ip" ).html();
      animation=$(this).attr("href");     
  
-     distribute_animation(ip,animation);
+     distribute_animation(data["ip"],animation);
 
+    });
 
-      event.preventDefault(); // stop the browser following the link
+  // attach delete action
+
+    // attach distribute action to this link
+    $( "#target_list li."+selector ).find( "a.delete" ).click (function (event) {
+     event.preventDefault();
+      $.ajax({
+        type: "GET", // or GET
+        url: this.href,
+      });
     });
 
 
-    // attach distribute action to this link
+
+
     $( "#target_list li."+selector ).find( ".activate_ip" ).change(function (event) {
         if($(this).is(":checked")) {
             console.log("add ip to active");
@@ -198,6 +209,7 @@ available_anims.push(key);
 }
 
 
+
 function distribute_animation(ip,animation)
 {
 
@@ -205,9 +217,52 @@ console.log("fetching anim from ip: ", ip ,);
 console.log("anim: ", animation);
 // get animation
 
+
+jQuery.ajax({
+        url:'http://'+ip+'/animations/'+animation,
+        cache:false,
+        xhr:function(){// Seems like the only way to get access to the xhr object
+            var xhr = new XMLHttpRequest();
+            xhr.responseType= 'blob'
+            return xhr;
+        },
+        success: function(data){
+            // the animation data is now available in the "data" object
+                console.log(data);
+                anim_content=data;    
+    },
+        error:function(){
+           //TODO implement info box here
+           console.log("Download failed :("); 
+        }
+});
+
+
 // go trough list of ips and skip ip of original address
 
-// send data to other ips with post request
+
+
+  var formData = new FormData();
+  var test = new Blob([anim_content], { type: "application/octet-stream"});
+
+  formData.append("filename", test,animation);
+
+
+ // TODO convert to .ajax, add error and success handlers
+  active_ips.forEach(function(remote_ip){
+ 
+   if(remote_ip == ip)
+   {
+         console.log("skipping distribution for own ip:" , ip);
+         return false;
+   }
+        var target = "http://" + remote_ip +"/edit.html";
+        console.log("sending data to:" , target);
+
+   var request = new XMLHttpRequest();
+   request.open("POST", target);
+   request.send(formData);
+  });
 
 }
 
