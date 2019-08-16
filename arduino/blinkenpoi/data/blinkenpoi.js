@@ -25,7 +25,7 @@ function load_animations(ip,firstload=false)
     if(firstload)
     {
        $("#targethost").val(data["ip"]);
-       $("#animationtarget").val(data["ip"]); 
+       $("#animationtarget").val(data["ip"]);
        $("#ip").val(data["ip"]);
 
        $("#myip").html(data["ip"]);
@@ -105,11 +105,11 @@ function add_stick_to_list(data)
                 data["version"]+
                 "</div> <div class='liste col-4'>"+
                 "<button class='toggle-animations'>Show</button></div>"+
-                "<div style='display:none' class='animations'> ";
+                "</div><div style='display:none' class='animations col-12'> ";
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<p><a class='runanim' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>DOWN</a> <a class='distribute' href='"+key+"' alt='Distribute this Animation to all other active Pois'>DIST</a> <a class='delete' href='http://"+ data["ip"] +"/delete/"+key+"' alt='Delete this Animation'>DELETE</a></p>";
+      info_item += "<p><a class='runanim col-6' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download button' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'><img src='icons/download.png' /></a> <a class='distribute button' href='"+key+"' alt='Distribute this Animation to all other active Pois'><img src='icons/dist.png' /></a> <a class='delete' href='http://"+ data["ip"] +"/delete/"+key+"' alt='Delete this Animation'>DELETE</a></p>";
 
       // add to global anim list
 available_anims.push(key);
@@ -137,7 +137,7 @@ available_anims.push(key);
 
 //hier JS einfuegen
 
-    // show/hide animations liste 
+    // show/hide animations liste
     $( "#target_list li."+selector ).find( "button.toggle-animations" ).click (function (e) {
   
      if($(this).parents().eq(1).find("div.animations").is(":visible"))
@@ -166,7 +166,7 @@ available_anims.push(key);
 
 
 
-    // attach distribute action to this link 
+    // attach distribute action to this link
     $( "#target_list li."+selector ).find( "a.distribute" ).click (function (event) {
      event.preventDefault();
 //     ip = $( "#target_list li."+selector ).find( "div.ip" ).html();
@@ -196,12 +196,12 @@ available_anims.push(key);
             active_ips.push($(this).val());
         }
         else
-        {   
+        {
             console.log("remove ip from active list");
             for (i=0;i<active_ips.length;i++)
             {
              if(active_ips[i] == $(this).val()) active_ips.splice(i, 1);
-            } 
+            }
         }
         console.log(active_ips);
 
@@ -463,7 +463,7 @@ function transmit_anim()
 
 
 // send data to all active pois
-// TODO implement alarm / confirm that data mitgh be overwritten 
+// TODO implement alarm / confirm that data mitgh be overwritten
 function mass_transmit_anim()
 {
   build_anim_data();
@@ -540,7 +540,7 @@ if(down)
 }
 }
 
-// for animmaker 
+// for animmaker
 function change_color_onclick(target)
 {
 
@@ -634,7 +634,7 @@ $().ready(function() {
     });
 
 
-    // attach scan function to button 
+    // attach scan function to button
     $( "#scan").click (function (event) {
         $("#loading").show();
         scan_iprange(target);
@@ -666,7 +666,7 @@ $().ready(function() {
    $(".col_0").click(function(){
     change_color_onclick(event.target);
    });
- 
+
    // nav menu
 
    $("#settings").click(e=>{
