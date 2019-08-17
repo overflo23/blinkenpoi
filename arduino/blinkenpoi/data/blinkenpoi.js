@@ -1,3 +1,56 @@
+/*
+Javascript TODOs
+
+
+You want to help and improve this this javascript?
+Great, thank you.
+Please submit pull requests on our github repository.
+
+Whet needs to be done here:
+
+ - save/load list of pois/ips on client somehow (session cookie, local storage?)
+
+ - automatically try to load content from pois found in session/client
+ 
+ - add some kind of warning / confirm to dangerous actions like:
+    -  overwriting existing animations
+    -  broadcast/distribute events that affect more than just one poii
+
+ - add some kind of error message if something goes wrong
+    -  filename contains wrong characters [a-z0-9_-] only
+    -  poi is not reachable during updates
+
+ - str_tolower animation names
+     
+ - reload animation list on update
+
+ - remove animation form list on delete
+ 
+ - animate remove / add of animations with some visual effect (fE jquery .fadeOut)
+
+ - warn that scanning the network takes a long time and disable controls once the scan is started
+
+ - make a nicer animation editor w
+  - provide something like 128 nice colors
+  - undo/back
+  - add and REMOVE row
+  - copy color form pixel
+  - duplicate last row
+  - move content in row one pixel up/down
+
+ I am sure there are 13123123 things i did not think of yet. 
+
+ Contribute whatever you think is cool, this project is public domain.
+
+ Always remember: You are riding a meat covered skeleton, on a rock floating trough the voids of space and time at a tremendous speed. 
+ Be excellent.
+ 
+
+ :*
+ -flo
+
+*/
+
 // we store availabe poi data globally.
 available_pois=[];
 
@@ -59,8 +112,7 @@ function load_animations(ip,firstload=false)
 
 
 
-
-
+// scans 255 ip addresses 1.2.3.X
 function scan_iprange(ip)
 {
   ip=$("#ip").val();
@@ -74,17 +126,15 @@ function scan_iprange(ip)
    targetIPs.push(targetip);
   }
 
-  // asynchrones json pull
+  //async json pull
   $.each( targetIPs, function( key, val ) {
       get_info(val);
     });
-
-
-
-
-
 }
 
+
+
+// adds entries to the DOM
 function add_stick_to_list(data)
 {
 
@@ -137,7 +187,6 @@ available_anims.push(key);
     }).appendTo( "#target_list" );
 
 
-//hier JS einfuegen
 
     // show/hide animations liste
     $( "#target_list li."+selector ).find( "button.toggle-animations" ).click (function (e) {
@@ -156,6 +205,8 @@ available_anims.push(key);
 
     });
 
+
+   // the entry is here, add some JS actions now
 
     // modify a links to use ajax in the background
     $( "#target_list li."+selector ).find( "a.runanim" ).click (function (event) {
@@ -176,9 +227,7 @@ available_anims.push(key);
 
     });
 
-  // attach delete action
-
-    // attach distribute action to this link
+    // attach delete action
     $( "#target_list li."+selector ).find( "a.delete" ).click (function (event) {
      event.preventDefault();
       $.ajax({
@@ -188,8 +237,7 @@ available_anims.push(key);
     });
 
 
-
-
+   // checkboxes to activate entries for mass actions
     $( "#target_list li."+selector ).find( ".activate_ip" ).change(function (event) {
         if($(this).is(":checked")) {
             console.log("add ip to active");
@@ -209,15 +257,15 @@ available_anims.push(key);
 }
 
 
-
+// fetch animation and send to all active pois
 function distribute_animation(ip,animation)
 {
 
 console.log("fetching anim from ip: ", ip ,);
 console.log("anim: ", animation);
+
+
 // get animation
-
-
 jQuery.ajax({
         url:'http://'+ip+'/animations/'+animation,
         cache:false,
@@ -267,6 +315,9 @@ jQuery.ajax({
 } // function end
 
 
+
+
+// fetch info from ip via http / json
 function get_info(ip)
 {
   //$("#info").html("Currently scanning: " + targeturl);
@@ -276,24 +327,19 @@ function get_info(ip)
 
 
 
-
-
   xqrc.always(function() {
     scanner_counter+=1;
     console.log(scanner_counter);
-create_animlist();
+    create_animlist();
 
+
+    // this is ugly, can we make this beautiful?
     if(scanner_counter==254)
     {
-     //scanner_counter=0;
-    //scan is done here
-
     console.log("scanning done");
 
-//    create_animlist();
 
-
-    // laoding verstecken
+    // loading verstecken
     $("#loading").hide();
     $( "#scancontent").show();
 
@@ -317,21 +363,20 @@ create_animlist();
 
 
 
-
+// create list of ALL available animations
 function create_animlist()
 {
-
-
-
 
   console.log("lets make the animlist");
   console.log(available_anims);
 
-const unique = (value, index, self) => {
+  //only ONE entry per animation 
+  const unique = (value, index, self) => {
     return self.indexOf(value) === index;
-}
+  }
 
- available_anims = available_anims.filter(unique);
+  available_anims = available_anims.filter(unique);
+  // alphabetic order
   available_anims.sort();
 
   var items = [];
@@ -340,8 +385,8 @@ const unique = (value, index, self) => {
   });
 
 
-// clear list
-$("#animationlist").empty();
+  // clear list
+  $("#animationlist").empty();
 
   // append entries to webinterface
   $( "<ul/>", {
@@ -349,23 +394,18 @@ $("#animationlist").empty();
     html: items.join( "" )
   }).appendTo( "#animationlist" );
 
-
-
-
-    // modify a links to use ajax in the background
-    $( "#animationlist" ).find( "a" ).click (function (event) {
-      console.log("do mass action for: " + this.href);
-      playonall(this.href);
-      event.preventDefault(); // stop the browser following the link
-    });
-
-
+  // modify a links to use ajax in the background
+  $( "#animationlist" ).find( "a" ).click (function (event) {
+    console.log("do mass action for: " + this.href);
+    playonall(this.href);
+    event.preventDefault(); // stop the browser following the link
+  });
 
 }
 
 
 
-
+// start playback on all active pois
 function playonall(anim)
 {
 
@@ -388,26 +428,12 @@ function playonall(anim)
            // TODO: add animations on list items RED flash
            console.log("FAILED ON:", target)
          },
-
         });
-
-
     });
-
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
+// build animation blob from editor data
 function build_anim_data()
 {
 
@@ -424,7 +450,6 @@ function build_anim_data()
     var id="#row_"+j+"_col_"+i;
     //console.log(id);
     var bgcol = $(id).css("background-color");
-    //var rgb = hexToRgb(hex);
 
     var rgb = bgcol.match(/\d+/g);
 
@@ -442,7 +467,6 @@ function build_anim_data()
 
 
 // send data to one poi
-
 function transmit_anim()
 {
   build_anim_data();
@@ -498,17 +522,8 @@ function download_anim()
 
 
 
-// helper function
-function hexToRgb(hex) {
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
-}
-
 // global detection if mousebutton is pressed.. ugly but works
+// TODO: nicer editor
 var down = false;
 $(document).mousedown(function() {
     down = true;
@@ -588,13 +603,13 @@ function addcolumn()
 
 
 
-// run the show!
-
-
+// this is executed once DOM is ready.
+// add actions to automatically start in here.
 $().ready(function() {
 
 
- // stuff in here is executed once document is loaded. binds events to various buttons, loads content via json ans so on..
+ // stuff in here is executed once document is loaded. 
+ // binds events to various buttons, loads content via json ans so on..
 
 
     if(window.location.port)
