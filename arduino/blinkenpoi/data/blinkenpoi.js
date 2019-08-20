@@ -11,7 +11,7 @@ Whet needs to be done here:
  - save/load list of pois/ips on client somehow (session cookie, local storage?)
 
  - automatically try to load content from pois found in session/client
- 
+
  - add some kind of warning / confirm to dangerous actions like:
     -  overwriting existing animations
     -  broadcast/distribute events that affect more than just one poii
@@ -21,11 +21,11 @@ Whet needs to be done here:
     -  poi is not reachable during updates
 
  - str_tolower animation names
-     
+
  - reload animation list on update
 
  - remove animation form list on delete
- 
+
  - animate remove / add of animations with some visual effect (fE jquery .fadeOut)
 
  - warn that scanning the network takes a long time and disable controls once the scan is started
@@ -38,13 +38,13 @@ Whet needs to be done here:
   - duplicate last row
   - move content in row one pixel up/down
 
- I am sure there are 13123123 things i did not think of yet. 
+ I am sure there are 13123123 things i did not think of yet.
 
  Contribute whatever you think is cool, this project is public domain.
 
- Always remember: You are riding a meat covered skeleton, on a rock floating trough the voids of space and time at a tremendous speed. 
+ Always remember: You are riding a meat covered skeleton, on a rock floating trough the voids of space and time at a tremendous speed.
  Be excellent.
- 
+
 
  :*
  -flo
@@ -63,7 +63,7 @@ scanner_counter=0;
 // currently selected pois / checkboxes
 active_ips =[];
 
-// anim content 
+// anim content
 var anim_content = new Uint8Array(1); // the body of the new file...
 
 
@@ -161,7 +161,12 @@ function add_stick_to_list(data)
 
     $.each(data["animations"], function(key,val){
       if(key=="EOF") return;
-      info_item += "<p><a class='runanim col-6' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a> <a class='download button' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'><img src='icons/download.png' /></a> <a class='distribute button' href='"+key+"' alt='Distribute this Animation to all other active Pois'><img src='icons/dist.png' /></a> <a class='delete' href='http://"+ data["ip"] +"/delete/"+key+"' alt='Delete this Animation'>DELETE</a></p>";
+      info_item += "<p><a class='runanim col-8' href='http://"+ data["ip"] +"/run/"+key+"'> "+key+" ("+ (val/25) +")</a>"+
+                "<a class='download button' href='http://"+ data["ip"] +"/animations/"+key+"' alt='Download Animation'>"+
+                "<img src='icons/download.png' /></a>"+
+                "<a class='distribute button' href='"+key+"' alt='Distribute this Animation to all other active Pois'>"+
+                "<img src='icons/dist.png' /></a>"+
+                "<a class='delete button' href='http://"+ data["ip"] +"/delete/"+key+"' alt='Delete this Animation'><img src='icons/trash.png' /></a></p>";
 
       // add to global anim list
 available_anims.push(key);
@@ -190,12 +195,12 @@ available_anims.push(key);
 
     // show/hide animations liste
     $( "#target_list li."+selector ).find( "button.toggle-animations" ).click (function (e) {
-  
+
      if($(this).parents().eq(1).find("div.animations").is(":visible"))
      {
         $(this).html("Show");
         $(this).parents().eq(1).find("div.animations").hide();
-     } 
+     }
      else
      {
         $(this).html("Hide");
@@ -222,7 +227,7 @@ available_anims.push(key);
     // attach distribute action to this link
     $( "#target_list li."+selector ).find( "a.distribute" ).click (function (event) {
      event.preventDefault();
-     animation=$(this).attr("href");     
+     animation=$(this).attr("href");
      distribute_animation(data["ip"],animation);
 
     });
@@ -278,10 +283,10 @@ jQuery.ajax({
         {
          // the animation data is now available in the "data" object
          var fileReader = new FileReader();
-         fileReader.onload = function(event) 
+         fileReader.onload = function(event)
          {
           anim_content = event.target.result;
-            
+
           // go trough list of ips and skip ip of original address
           var formData = new FormData();
           var test = new Blob([anim_content], { type: "application/octet-stream"});
@@ -308,7 +313,7 @@ jQuery.ajax({
 
     error:function(){
      //TODO implement info box here
-     console.log("Download failed :("); 
+     console.log("Download failed :(");
     }
  });
 
@@ -370,7 +375,7 @@ function create_animlist()
   console.log("lets make the animlist");
   console.log(available_anims);
 
-  //only ONE entry per animation 
+  //only ONE entry per animation
   const unique = (value, index, self) => {
     return self.indexOf(value) === index;
   }
@@ -608,7 +613,7 @@ function addcolumn()
 $().ready(function() {
 
 
- // stuff in here is executed once document is loaded. 
+ // stuff in here is executed once document is loaded.
  // binds events to various buttons, loads content via json ans so on..
 
 

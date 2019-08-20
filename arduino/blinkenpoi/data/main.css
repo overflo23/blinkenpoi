@@ -177,6 +177,7 @@ div.animations a {
  padding: 4px;
  margin: 0px 10px;
  display: flex;
+ background-color: transparent;
 }
 .row{
   display: flex;
@@ -680,6 +681,12 @@ nav .nav-element{
   }
   ul#target_list li div{
     font-size: 0.8rem;
+  }
+  .runanim{
+    max-width: 41.667%;
+  }
+  div.animations a{
+    margin: 0px;
   }
 
 }
