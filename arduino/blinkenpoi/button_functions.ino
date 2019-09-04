@@ -1,10 +1,10 @@
 boolean checkButtons()
 {
 
-  button1.tick();
+  button2.tick();
 //  button2.tick();
 
-  if(!digitalRead(button1_pin)) return true;
+  if(!digitalRead(button2_pin)) return true;
  
   return false;
   
@@ -14,8 +14,8 @@ boolean checkButtons()
 
 
 //TODO set flag and handle content elsewhere
-void click1() {
-  Serial.println("Button 1 click.");
+void click2() {
+  Serial.println("Button 2 click.");
   animation_running++;
   if(animation_running>total_animations) animation_running=0;
   load_animation(animation_running);
@@ -23,7 +23,7 @@ void click1() {
 
 
 //TODO set flag and handle content elsewhere 
-void longpress1() {
-  Serial.println("Button 1 longpress.");
+void longpress2() {
+  Serial.println("Button 2 longpress.");
   reset_config = true;
 } 

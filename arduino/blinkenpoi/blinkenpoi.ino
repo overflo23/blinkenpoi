@@ -1,6 +1,9 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
+// Install the libraries with arduino library manager in Tools/Manage libraries
+
+
 #include <WiFiManager.h>          //https://github.com/tzapu/WiFiManager
 #include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
                                    // NEEDS v5.x !! >6.x will fail to compile
@@ -12,12 +15,26 @@
 #include "OneButton.h"
 
 
+
+
+
 /*
+ * 
+ * 
+ * 
+ * 
  *   What is going on in here?
  * 
  *  This is the firmware running on the Blinkenpoi 
  *  Documentation: 
  *   https://metalab.at/wiki/Blinkenpoi
+ * 
+ * 
+ *   PLEASE READ THIS!
+ *   This is a rather complex setup and you need to install various libraries, some at a specific version.
+ *   Please read the information provided here;
+ *   https://github.com/overflo23/blinkenpoi/wiki/Building-the-Firmware
+ *   
  * 
  *  First time turn on:
  * 
@@ -26,7 +43,7 @@
  *  Once connected to the accesspoint you should be welcomed by a captive portal.
  *  If this fails the poi is accessable at 192.168.4.1
  * 
- *  After configuration it saves the stick anme and network credentials if it was successfully connecting.
+ *  After configuration it saves the stick name and network credentials if it was successfully connecting.
  *  Success is indicted by a green led.
  * 
  *  --
@@ -34,10 +51,10 @@
  *  Normal operation:
  *  Turn on the stick, it shines a pink led for ~ 2 seconds.
  *  This can be interrupted by a short press of the button.
- *  If you interrupt now the network is NOT configured and the stick is avainalbe offline and you can cycle trough the animations on the stick with the button.
+ *  If you interrupt now the network is NOT configured and the stick is available offline and you can cycle trough the animations on the stick with the button.
  *  
  *  If you press the button during the pink phase and keep it pressed or ~1.5 seconds you activate a configuration RESET.
- *  The saved wifi information is deleted and an access point is opened for configuration.
+ *  The first led will blink red 3 times and the saved wifi information is deleted and an access point is opened for configuration.
  *  
  *  Once the stick operates it waits for a trigger on the weninterface.
  *  Animation playback is triggered by an HTTP request.
@@ -47,18 +64,34 @@
  * 
  *   My code is CC0 Public domain, (ab)use at will. 
  *   But some libraries use GPL or other licenses which apply.
+ *   
  */
 
 
-// button2 is borken because the wemos D1 has a strong pulldown resistor that can not be overridden with internal_pullup on D8 / GPIO15
+
+
+
+// These are the internal pin numbers used to drive the leds.
+// if C and D are swapped on your ledstrip just swap these two numbers
+#define DATAPIN    14
+#define CLOCKPIN   13
+
+
+
+
+// button1 is borken because the wemos D1 has a strong pulldown resistor that can not be overridden with internal_pullup on D8 / GPIO15
 // well. fuck.
-// so it is a one-button interface from hell than :(
+// so it is a one-button interface than :(
+// kann man so machen ist dann halt scheisse.
 
 // valid pinout for PCB rev. 3.0
-const int button1_pin=2; // D4
+const int button2_pin=2; // D4
 
 // valid pinout for PCB rev. 1.0
 //const int button1_pin=12; // D6
+
+
+
 
 
 
@@ -81,12 +114,10 @@ const char* mdnsName = "blinkenpoi"; // Domain name for the mDNS responder
 
 
 
-
-//  das ist alles scheisse mit den buttons.
 //  TODO: neue button belegung evaluieren / too late for CCCamp 2019 :(
 
-OneButton button1(button1_pin, true);
-//OneButton button2(button2_pin, false);
+OneButton button2(button2_pin, true);
+//OneButton button1(button1_pin, false);
 
 
 

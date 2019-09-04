@@ -1,9 +1,5 @@
 #define NUMPIXELS 50 // Number of LEDs in strip
 
-// Here's how to control the LEDs from any two pins:
-#define DATAPIN    13
-#define CLOCKPIN   14
-
 Adafruit_DotStar strip(NUMPIXELS, DATAPIN, CLOCKPIN, DOTSTAR_BGR);
 File animation_file ;
 

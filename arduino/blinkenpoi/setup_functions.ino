@@ -290,8 +290,8 @@ void startButtons()
  // run during boot once
 
   //onebuttion setup
-   button1.attachClick(click1);
-   button1.attachLongPressStart(longpress1);
+   button2.attachClick(click2);
+   button2.attachLongPressStart(longpress2);
    //button2.attachClick(click2);
 }
 
@@ -308,7 +308,7 @@ boolean checkforButtonInterrupt()
   int  checkbutton=0;
   while(true)
   {
-   button1.tick();
+   button2.tick();
    if(animation_running || reset_config) 
    { 
     Serial.println("time for a break.");
