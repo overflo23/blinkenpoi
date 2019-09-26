@@ -474,7 +474,7 @@ function build_anim_data()
 // send data to one poi
 function transmit_anim()
 {
-  build_anim_data();
+//  build_anim_data();
 
   var formData = new FormData();
   var test = new Blob([anim_content], { type: "application/octet-stream"});
@@ -494,7 +494,7 @@ function transmit_anim()
 // TODO implement alarm / confirm that data mitgh be overwritten
 function mass_transmit_anim()
 {
-  build_anim_data();
+  //build_anim_data();
 
   var formData = new FormData();
   var test = new Blob([anim_content], { type: "application/octet-stream"});
@@ -518,7 +518,7 @@ function mass_transmit_anim()
 // download link at anim  maker
 function download_anim()
 {
-  build_anim_data();
+  //build_anim_data();
   var anim_blob = new Blob([anim_content], { type: "application/octet-stream"});
   var filename=$("#filename").val()+".poi";
   saveAs(anim_blob, filename);
@@ -557,6 +557,9 @@ if(down)
    $(target).css("background-color","#000000");
   }
 }
+
+build_anim_data();
+
 }
 
 // for animmaker
@@ -574,6 +577,10 @@ function change_color_onclick(target)
     {
      $(target).css("background-color","#000000");
     }
+
+
+    build_anim_data();
+
 }
 
 
@@ -599,7 +606,130 @@ function addcolumn()
    });
  }
  colcount+=1;
+
+ build_anim_data();
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// for anim from file
+
+
+function draw(file){
+  var img = new Image();
+  img.src = (window.webkitURL ? webkitURL : URL).createObjectURL(file); // URL @ Mozilla, webkitURL @ Chrome
+
+  var canvas = document.getElementById("image_canvas");
+  var ctx = canvas.getContext("2d");
+
+  img.onload = function() {
+
+
+
+      // hide all the stuff
+      $("#image_errors").hide();
+      $("#image_anim_options").hide();
+      
+
+      //$("#actions").show();
+
+
+
+
+
+
+      // $("#info").hide();
+      //$("#info").html(`image h=${this.height}, w=${this.width}`);
+      //$("#info").show();
+
+      if (img.height != 25) {
+          $("#image_errors").html(`Image needs to have 25 pixels height, but has ${img.height} px`);
+          $("#image_errors").show();
+       //   $("#btnExportBytes").prop("disabled", true);
+          return
+      }
+
+
+      canvas.height = img.height
+      canvas.width = img.width
+      ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height); // stretch img to canvas size
+
+
+
+
+
+      $("#image_anim_options").show();
+
+      exportBytes();
+
+      //$("#errors").hide();
+      //$("#btnExportBytes").prop("disabled", false);
+
+      // var myImageData = ctx.getImageData(0, 0, 1, 26).data;
+      // console.log(myImageData);
+  }
+}
+
+function exportBytes() {
+  var canvas = document.getElementById("image_canvas");
+  var ctx = canvas.getContext("2d");
+  // console.log("export", canvas.height, canvas.width)
+
+  var exportBytesRGBA = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+  // console.log("canvas byte array:", exportBytesRGBA.length, exportBytesRGBA);
+
+  // convert canvas rgba array to our rgb (just strip every 4th item)
+  var exportBytesRGB = exportBytesRGBA.filter(function(_, i) { return (i + 1) % 4 })
+  // console.log("export byte array:", exportBytesRGB.length, exportBytesRGB);
+
+
+  var a_size= 3*25*canvas.width;
+  console.log("building animation buffer of size: # " + a_size);
+  anim_content = new Uint8Array(a_size); // the body of the new file...
+
+
+
+  // Blinkenpoi wants the bytes column-by-column, but canvas exports row-by-row. Transform now:
+  //var exportBytesByColumn = [];
+
+  index_counter=0;
+  for (var col=0; col<canvas.width; col++) {
+      for (var row=24; row>=0; row--) {
+
+        anim_content[index_counter] =     exportBytesRGB[(col + row * canvas.width) * 3];
+        anim_content[index_counter + 1] = exportBytesRGB[(col + row * canvas.width) * 3 + 1];
+        anim_content[index_counter + 2] = exportBytesRGB[(col + row * canvas.width) * 3 + 2];
+        index_counter+=3;
+
+      }
+  }
+  console.log("column-wise export bytes:", anim_content.length, anim_content);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -637,6 +767,13 @@ $().ready(function() {
 
 
 
+    //animation from picture file choser
+     $( "#image_choose").on ("change", function (event) {
+      //console.log(this.files);
+      draw(this.files[0]);
+
+    });
+
 
    // add one specific ip to list
     $( "#targetrefreshbutton").click (function (event) {
@@ -662,15 +799,15 @@ $().ready(function() {
 
 
 
-   $( "#transmit_anim").click (function (event) {
+   $( ".transmit_anim").click (function (event) {
     transmit_anim();
    });
 
-   $( "#mass_transmit_anim").click (function (event) {
+   $( ".mass_transmit_anim").click (function (event) {
     mass_transmit_anim();
    });
 
-   $( "#download_anim").click (function (event) {
+   $( ".download_anim").click (function (event) {
     download_anim();
    });
 
