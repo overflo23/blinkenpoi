@@ -632,6 +632,7 @@ function draw(file){
 
   var canvas = document.getElementById("image_canvas");
   var ctx = canvas.getContext("2d");
+  
 
   img.onload = function() {
 
@@ -641,24 +642,13 @@ function draw(file){
       $("#image_errors").hide();
       $("#image_anim_options").hide();
       
-
-      //$("#actions").show();
-
-
-
-
-
-
-      // $("#info").hide();
-      //$("#info").html(`image h=${this.height}, w=${this.width}`);
-      //$("#info").show();
-
+/*
       if (img.height != 25) {
           $("#image_errors").html(`Image needs to have 25 pixels height, but has ${img.height} px`);
           $("#image_errors").show();
-       //   $("#btnExportBytes").prop("disabled", true);
           return
       }
+*/
 
 
       canvas.height = img.height
@@ -668,16 +658,86 @@ function draw(file){
 
 
 
+      $("#image_canvas").show();
+      $("#actions").show();
+
+      // $("#info").hide();
+      $("#info").html(`image h=${this.height}, w=${this.width}`);
+      $("#info").show();
+
+      $("#errors").hide();
+      $("#btnExportBytes").prop("disabled", false);
+
+
 
       $("#image_anim_options").show();
 
-      exportBytes();
 
-      //$("#errors").hide();
-      //$("#btnExportBytes").prop("disabled", false);
 
-      // var myImageData = ctx.getImageData(0, 0, 1, 26).data;
-      // console.log(myImageData);
+      const cropper = new Cropper(canvas, {
+        dragMode: 'move',
+        restore: false,
+        guides: false,
+        center: false,
+        highlight: true,
+        cropBoxMovable: false,
+        cropBoxResizable: false,
+        toggleDragModeOnDblclick: false,
+        viewMode: 1, // ip down movement only
+
+        data:{
+            width: 25,
+            height:  25,
+            
+        },
+
+          crop: function (event) {
+
+            console.log(event.detail.width);
+            $("#preview").html(
+
+              cropper.getCroppedCanvas({
+                width: 25,
+                height: 25,
+                _minWidth: 25,
+                _minHeight: 25,
+                _maxWidth: 25,
+                _maxHeight: 25,
+                fillColor: '#fff',
+                imageSmoothingEnabled: false,
+             
+              })
+            );
+
+         
+  
+/*
+              // copy cropped stuff to large canvas for review
+            console.log(event.detail.x);
+            console.log(event.detail.y);
+            console.log(event.detail.width);
+            console.log(event.detail.height);
+            console.log(event.detail.rotate);
+            console.log(event.detail.scaleX);
+            console.log(event.detail.scaleY);
+        */
+        },
+
+
+
+
+    });
+
+
+
+
+      // generate animation content
+      //exportBytes();
+
+     // set name for animation export 
+      $("#filename").val(file.name.split(".")[0]);
+
+
   }
 }
 

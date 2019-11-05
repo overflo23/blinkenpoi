@@ -9,7 +9,8 @@
     <script src="filesaver.js" type="text/javascript"></script>
     <script src="blinkenpoi.js" type="text/javascript"></script>
     <script src="jscolor.js" type="text/javascript"></script>
-</head>
+    <script src="cropper.min.js" type="text/javascript"></script>
+  </head>
 
 
 
@@ -199,6 +200,7 @@ There is more todo in blinkenpoi.js  ;)
                 <div id="animationlist"></div>
               </div>
             </div>
+
             <div class="animator">
               <div class="section">
                 <h4>Upload Animation</h4>
@@ -217,11 +219,44 @@ There is more todo in blinkenpoi.js  ;)
               <div class="section">
                 <h4>Animation from Image</h4>
                  <div id="pic_upload">
-                    File must be a picture of exactly 25px height, in a format supported by your browser
-                <input id="image_choose" type="file" name="Choose Picture">
+                   <div class='infotext'>
+                    File must be a picture in a format supported by your browser.<br/>Optimally 25 pixel in height.<br/>PNG, GIF or BMP preferred, JPG has compressionartifacts!
+                  </div>
+                  <input id="image_choose" type="file" name="Choose Picture">
 
                 <div id="image_anim_options" style="display:none;">
+
+
+
+<!--   neu -->          
+          <div class="container">
+            <div id="cropper_container">
+                <div>
                   <canvas id="image_canvas" ></canvas>
+                </div>
+            </div>
+
+
+            <div id="preview"></div>
+
+          </div>
+
+
+
+
+
+      
+
+          <div id="info"></div>
+            
+          <div class="alert alert-danger" role="alert" id="errors"></div>
+          <div id="actions">
+            <button type="button" class="btn btn-sm btn-primary" disabled id="btnExportBytes" onclick="javascript:exportBytes()">Export bytes</button>
+        </div>
+<!--   aus -->
+
+
+                  
                   <input class="button download_anim" type="button" value="Download Animation" name="Download Animation">
                   <input class="button transmit_anim" type="button"  value="Send Data to poi" >
                   <input class="button mass_transmit_anim" type="button"  value="Send Data to ALL active pois" >
@@ -234,6 +269,20 @@ There is more todo in blinkenpoi.js  ;)
 
                
                   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
               </div>
 
