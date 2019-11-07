@@ -8,7 +8,6 @@
     <script src="jquery-3.4.1.min.js" type="text/javascript"></script>
     <script src="filesaver.js" type="text/javascript"></script>
     <script src="blinkenpoi.js" type="text/javascript"></script>
-    <script src="jscolor.js" type="text/javascript"></script>
     <script src="cropper.min.js" type="text/javascript"></script>
   </head>
 
@@ -38,6 +37,10 @@ There is more todo in blinkenpoi.js  ;)
 
 <body>
     <center>
+
+        <div id="errors">something fishy happened</div>
+        <div id="messages">oy mate! there is a message in here</div>
+
         <header class="section">
           <div class="circle-animation-container">
             <div class="circle-multiple">
@@ -97,6 +100,7 @@ There is more todo in blinkenpoi.js  ;)
             <div class="settings">
               <div class="section">
                 <div id="info"></div>
+
                 <div id="localinfo">
                   <div>You are connected to: <span id="myhostname">Unknown</span></div>
                   <div>IPv4 Address: <span id="myip">Unknown</span></div>
@@ -202,142 +206,52 @@ There is more todo in blinkenpoi.js  ;)
             </div>
 
             <div class="animator">
-              <div class="section">
-                <h4>Upload Animation</h4>
-
-                  <div class="name-label">Target for upload: </div>
-                  <input type="text" name="animationtarget" id="animationtarget" value="" />
-
-                <form action="" id="uploadform" method="post" enctype="multipart/form-data" style="margin: 0px auto 8px auto" >
-                    <input type="file" name="Choose file" accept=".poi">
-                    <input class="button" id="uploadbutton" type="submit" value="Upload" name="submit">
-                </form>
-              </div>
-
-
 
               <div class="section">
                 <h4>Animation from Image</h4>
                  <div id="pic_upload">
-                   <div class='infotext'>
-                    File must be a picture in a format supported by your browser.<br/>Optimally 25 pixel in height.<br/>PNG, GIF or BMP preferred, JPG has compressionartifacts!
-                  </div>
-                  <input id="image_choose" type="file" name="Choose Picture">
-
-                <div id="image_anim_options" style="display:none;">
-
-
-
-<!--   neu -->          
-          <div class="container">
-            <div id="cropper_container">
-                <div>
-                  <canvas id="image_canvas" ></canvas>
-                </div>
-            </div>
-
-
-            <div id="preview"></div>
-
-          </div>
-
-
-
-
-
-      
-
-          <div id="info"></div>
-            
-          <div class="alert alert-danger" role="alert" id="errors"></div>
-          <div id="actions">
-            <button type="button" class="btn btn-sm btn-primary" disabled id="btnExportBytes" onclick="javascript:exportBytes()">Export bytes</button>
-        </div>
-<!--   aus -->
-
-
-                  
-                  <input class="button download_anim" type="button" value="Download Animation" name="Download Animation">
-                  <input class="button transmit_anim" type="button"  value="Send Data to poi" >
-                  <input class="button mass_transmit_anim" type="button"  value="Send Data to ALL active pois" >
-
-                </div>
-                    
-                <div id="image_errors" style="display:none;">
-                    something failed
-                </div>
-
-               
+                  <div class='infotext'>
+                    File must be a picture in a format supported by your browser.<br/>
+                    Optimally 25 pixel in height.<br/>
+                    PNG, GIF or BMP preferred, JPG has compressionartifacts!
                   </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                  <input id="image_choose" type="file" name="Choose Picture" />
+                  <div id="image_anim_options">     
+                  <div class="container">
+                    <div id="cropper_container">
+                      <div>
+                       <canvas id="image_canvas" ></canvas>
+                      </div>
+                    </div>
+                    <div id="preview"></div>
+                   </div>
+                   <div class="name-label">Name: </div>
+                   <input type="text" name="filename" id="filename" value="animation" />  
+                   <input class="button download_anim" type="button" value="Download Animation" name="Download Animation">
+                   <input class="button transmit_anim" type="button"  value="Send Data to poi" >
+                   <input class="button mass_transmit_anim" type="button"  value="Send Data to ALL active pois" >
+                  </div>
+                 </div>
               </div>
-
 
               <div class="section">
-                <h4>Create Animation</h4>
-                  <div class="name-label">Name: </div>
-                  <input type="text" name="filename" id="filename" value="animation" />
-                  <input class="button download_anim" type="button"  value="Download Animation" name="Download Animation">
-                  <input class="button transmit_anim " type="button" value="Send Data to poi" >
-                  <input class="button mass_transmit_anim" type="button" value="Send Data to ALL active pois" >
-                </div>
-                <div id="painter">
-                  <div class="animaker-container">
-                    <table id="animaker">
-                      <tr id="row0"><td class="col_0" id="row_0_col_0"></td></tr>
-                      <tr id="row1"><td class="col_0" id="row_1_col_0"></td></tr>
-                      <tr id="row2"><td class="col_0" id="row_2_col_0"></td></tr>
-                      <tr id="row3"><td class="col_0" id="row_3_col_0"></td></tr>
-                      <tr id="row4"><td class="col_0" id="row_4_col_0"></td></tr>
-                      <tr id="row5"><td class="col_0" id="row_5_col_0"></td></tr>
-                      <tr id="row6"><td class="col_0" id="row_6_col_0"></td></tr>
-                      <tr id="row7"><td class="col_0" id="row_7_col_0"></td></tr>
-                      <tr id="row8"><td class="col_0" id="row_8_col_0"></td></tr>
-                      <tr id="row9"><td class="col_0" id="row_9_col_0"></td></tr>
-                      <tr id="row10"><td class="col_0" id="row_10_col_0"></td></tr>
-                      <tr id="row11"><td class="col_0" id="row_11_col_0"></td></tr>
-                      <tr id="row12"><td class="col_0" id="row_12_col_0"></td></tr>
-                      <tr id="row13"><td class="col_0" id="row_13_col_0"></td></tr>
-                      <tr id="row14"><td class="col_0" id="row_14_col_0"></td></tr>
-                      <tr id="row15"><td class="col_0" id="row_15_col_0"></td></tr>
-                      <tr id="row16"><td class="col_0" id="row_16_col_0"></td></tr>
-                      <tr id="row17"><td class="col_0" id="row_17_col_0"></td></tr>
-                      <tr id="row18"><td class="col_0" id="row_18_col_0"></td></tr>
-                      <tr id="row19"><td class="col_0" id="row_19_col_0"></td></tr>
-                      <tr id="row20"><td class="col_0" id="row_20_col_0"></td></tr>
-                      <tr id="row21"><td class="col_0" id="row_21_col_0"></td></tr>
-                      <tr id="row22"><td class="col_0" id="row_22_col_0"></td></tr>
-                      <tr id="row23"><td class="col_0" id="row_23_col_0"></td></tr>
-                      <tr id="row24"><td class="col_0" id="row_24_col_0"></td></tr>
-                    </table>
-                  </div>
-                  <div class="animator-actions">
-                    <input class="button" type="button" id="addcolumn" value="Add Column" name="Add Column">
-                    <button class="jscolor {value:'00ff00'}" name="color" id="color" ></button>
-
-                  </div>
-
+                  <h4>Upload Animation</h4>
+  
+                    <div class="name-label">Target for upload: </div>
+                    <input type="text" name="animationtarget" id="animationtarget" value="" />
+  
+                  <form action="" id="uploadform" method="post" enctype="multipart/form-data" style="margin: 0px auto 8px auto" >
+                      <input type="file" name="Choose file" accept=".poi">
+                      <input class="button" id="uploadbutton" type="submit" value="Upload" name="submit">
+                  </form>
                 </div>
 
-              </div>
+
             </div>
           </div>
-
         </div>
+      </div>
     </center>
 </body>
 

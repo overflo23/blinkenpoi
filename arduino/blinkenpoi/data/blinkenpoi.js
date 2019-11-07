@@ -623,9 +623,10 @@ function addcolumn()
 
 
 
+
+cropper = false;
+
 // for anim from file
-
-
 function draw(file){
   var img = new Image();
   img.src = (window.webkitURL ? webkitURL : URL).createObjectURL(file); // URL @ Mozilla, webkitURL @ Chrome
@@ -662,8 +663,8 @@ function draw(file){
       $("#actions").show();
 
       // $("#info").hide();
-      $("#info").html(`image h=${this.height}, w=${this.width}`);
-      $("#info").show();
+      //$("#info").html(`image h=${this.height}, w=${this.width}`);
+      //$("#info").show();
 
       $("#errors").hide();
       $("#btnExportBytes").prop("disabled", false);
@@ -671,10 +672,17 @@ function draw(file){
 
 
       $("#image_anim_options").show();
+    
+
+      try
+      {
+        cropper.destroy(); 
+      }
+      catch(e) {}
 
 
 
-      const cropper = new Cropper(canvas, {
+       cropper = new Cropper(canvas, {
         dragMode: 'move',
         restore: false,
         guides: false,
@@ -686,41 +694,31 @@ function draw(file){
         viewMode: 1, // ip down movement only
 
         data:{
-            width: 25,
+            width: img.width,
             height:  25,
             
         },
 
           crop: function (event) {
 
-            console.log(event.detail.width);
+     //       console.log("look: " , event.detail.width);
             $("#preview").html(
 
               cropper.getCroppedCanvas({
                 width: 25,
                 height: 25,
-                _minWidth: 25,
-                _minHeight: 25,
-                _maxWidth: 25,
-                _maxHeight: 25,
-                fillColor: '#fff',
+                minWidth: 25,
+                minHeight: 25,
+                maxWidth: 250,
+                maxHeight: 25,
+                fillColor: '#000',
                 imageSmoothingEnabled: false,
              
               })
             );
 
          
-  
-/*
-              // copy cropped stuff to large canvas for review
-            console.log(event.detail.x);
-            console.log(event.detail.y);
-            console.log(event.detail.width);
-            console.log(event.detail.height);
-            console.log(event.detail.rotate);
-            console.log(event.detail.scaleX);
-            console.log(event.detail.scaleY);
-        */
+
         },
 
 
@@ -728,11 +726,13 @@ function draw(file){
 
     });
 
+    //cropper_pointer = cropper;
+    //cropper.destroy();
 
 
 
       // generate animation content
-      //exportBytes();
+      exportBytes();
 
      // set name for animation export 
       $("#filename").val(file.name.split(".")[0]);
@@ -740,6 +740,9 @@ function draw(file){
 
   }
 }
+
+
+
 
 function exportBytes() {
   var canvas = document.getElementById("image_canvas");
@@ -774,7 +777,7 @@ function exportBytes() {
 
       }
   }
-  console.log("column-wise export bytes:", anim_content.length, anim_content);
+  //console.log("column-wise export bytes:", anim_content.length, anim_content);
 }
 
 

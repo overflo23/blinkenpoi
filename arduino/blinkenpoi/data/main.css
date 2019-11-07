@@ -314,21 +314,9 @@ nav .nav-element{
   max-width: 100%;
 }
 .animator{
-  display: block;
-}
-#animaker {
- border:none;
- table-layout: fixed;
+  display: none;
 }
 
-#animaker tr td {
-    b!order-collapse: collapse;
-    border:1px solid black;
-    margin:1px;
-    width:10px;
-    height:10px;
-    background-color: black;
-}
 #loading{
   display: flex;
   justify-content: center;
@@ -433,6 +421,14 @@ nav .nav-element{
 #painter{
   display: flex;
 }
+
+
+#image_anim_options {
+ display:none;
+
+}
+
+
 .anim_masstargets{
   list-style: none;
   text-align: left;
@@ -725,7 +721,34 @@ nav .nav-element{
 canvas {
   border: 1px solid black;
 }
-#errors { display: none; }
+#errors { 
+   border:1px solid black;
+   background-color:red;
+   text-align:center;
+   z-index:100;
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   top: 0;
+   left: 0;
+   display:none;
+
+  }
+
+  #messages { 
+    border:1px solid black;
+    background-color:green;
+    text-align:center;
+    z-index:100;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display:none;
+   }
+
+
 #actions {
   margin-top: 10px;
 }
