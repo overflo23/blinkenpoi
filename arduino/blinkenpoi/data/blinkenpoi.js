@@ -67,6 +67,9 @@ active_ips =[];
 var anim_content = new Uint8Array(1); // the body of the new file...
 
 
+// does the webinterface load from a blinkenpoi?
+var selfhosting=true;
+
 
 
 // get JSON from  poi
@@ -74,36 +77,55 @@ var anim_content = new Uint8Array(1); // the body of the new file...
 function load_animations(ip,firstload=false)
 {
 
-  var xqrc= $.getJSON( "http://"+ip+"/get_info", function( data ) {
+  if(!ip)
+  {
+    show_error("Please provide an IP");
+    return;
 
-    // this is the data for the local stick
-    if(firstload)
-    {
-       $("#targethost").val(data["ip"]);
-       $("#animationtarget").val(data["ip"]);
-       $("#ip").val(data["ip"]);
+  }
 
-       $("#myip").html(data["ip"]);
-       $("#myhostname").html(data["name"]);
+  var request = $.ajax({
+    dataType: "json",
+    url: "http://"+ip+"/get_info",
+    //data: data,
+    success: function( data ) {
 
-    }
+      // this is the data for the local stick
+      if(firstload)
+      {
+        //show localinfo div
+        $("#localinfo").fadeIn();
 
-    add_stick_to_list(data);
-    create_animlist();
+         $("#targethost").val(data["ip"]);
+         $("#animationtarget").val(data["ip"]);
+         $("#ip").val(data["ip"]);
+  
+         $("#myip").html(data["ip"]);
+         $("#myhostname").html(data["name"]);
+  
+      }
+  
+      add_stick_to_list(data);
+      create_animlist();
+  
+    },
+    timeout: 2000
+}).fail( function( xhr, status ) {
 
-  });
+  if(firstload)
+  {
+    selfhosting=false;
+    //disable transmit to blinkenpoi if we are not on a blineknpoi
+    $( ".transmit_anim").hide();
+  }
 
-
-  xqrc.always(function() {
-    // modify a links to use ajax in the background
-    $( ".local_animation_list" ).find( "a" ).click (function (event) {
-      $.ajax({
-        type: "GET", // or GET
-        url: this.href,
-      });
-      event.preventDefault(); // stop the browser following the link
-    });
-  });
+  //  if( status == "timeout" ) {
+  //      // do stuff in case of timeout
+  //  }
+  //  else
+      show_error("Failed to load content from " + ip);
+    //alert(status);
+});
 
 
 
@@ -235,11 +257,30 @@ available_anims.push(key);
     // attach delete action
     $( "#target_list li."+selector ).find( "a.delete" ).click (function (event) {
      event.preventDefault();
-      $.ajax({
+
+     
+    
+      var ajx = $.ajax({
         type: "GET", // or GET
         url: this.href,
+      })
+      .fail( function( xhr, status ) {
+        alert("fail");
+        if( status == "error" ) {
+         show_error("Can not delete animation");
+        }
+        else
+        {
+         show_error("Something went wrong");
+        }
+      })
+      .done( function( xhr, status ) {
+         $(event.target).parents("p").remove();
+         show_success("Successfully deleted animation");
       });
     });
+
+  
 
 
    // checkboxes to activate entries for mass actions
@@ -259,6 +300,9 @@ available_anims.push(key);
         console.log(active_ips);
 
     });
+
+    $("#pois_list").fadeIn();
+
 }
 
 
@@ -266,7 +310,7 @@ available_anims.push(key);
 function distribute_animation(ip,animation)
 {
 
-console.log("fetching anim from ip: ", ip ,);
+console.log("fetching anim from ip: ", ip);
 console.log("anim: ", animation);
 
 
@@ -309,11 +353,18 @@ jQuery.ajax({
           });
          };
         fileReader.readAsArrayBuffer(data);
-    }, // ajax success end
+        if((active_ips.length - 1)>0)
+        {
+         show_success("Animation sent to " + (active_ips.length - 1) + " Blinkenpois");
+        }
+        else
+        {
+         show_error("No other active Blinkenpois found");
+        }
+        }, // ajax success end
 
     error:function(){
-     //TODO implement info box here
-     console.log("Download failed :(");
+     show_error("Failed to download animation from stick");
     }
  });
 
@@ -406,6 +457,10 @@ function create_animlist()
     event.preventDefault(); // stop the browser following the link
   });
 
+
+  $("#animations_list").fadeIn();
+
+
 }
 
 
@@ -432,12 +487,15 @@ function playonall(anim)
          error: function(e){
            // TODO: add animations on list items RED flash
            console.log("FAILED ON:", target)
+           show_error("Failed to start animation on " + ip);
          },
         });
     });
-}
 
 
+  }
+
+/*
 // build animation blob from editor data
 function build_anim_data()
 {
@@ -469,7 +527,7 @@ function build_anim_data()
   console.log(anim_content);
 
 }
-
+*/
 
 // send data to one poi
 function transmit_anim()
@@ -484,14 +542,36 @@ function transmit_anim()
 
   var target=$("#animationtarget").val();
 
+
+
+  $.ajax({
+    url: "http://"+target+"/edit.html",
+    data: formData,
+    processData: false,
+    contentType: false,
+    type: 'POST',
+    timeout: 2000,
+    success: function(data){
+      show_success("Successfully sent to " +ip);
+    },
+    error: function(e){
+     show_error("Failed to send animation to " +ip);
+    }
+    
+  });
+
+
+
+/*
   var request = new XMLHttpRequest();
   request.open("POST", "http://"+target+"/edit.html");
   request.send(formData);
+*/
 }
 
 
 // send data to all active pois
-// TODO implement alarm / confirm that data mitgh be overwritten
+// TODO implement alarm / confirm that data might be overwritten
 function mass_transmit_anim()
 {
   //build_anim_data();
@@ -506,10 +586,37 @@ function mass_transmit_anim()
  // TODO convert to .ajax, add error and success handlers
   active_ips.forEach(function(ip){
    console.log("sending animation data to: ", ip);
+
+
+   
+   $.ajax({
+     url: "http://"+ip+"/edit.html",
+     data: formData,
+     processData: false,
+     contentType: false,
+     type: 'POST',
+     timeout: 2000,
+     success: function(data){
+       show_success("Successfully sent to " +ip);
+     },
+     error: function(e){
+      show_error("Failed to send animation to " +ip);
+     }
+     
+   });
+
+  });
+
+
+
+
+/*
    var request = new XMLHttpRequest();
    request.open("POST", "http://"+ip+"/edit.html");
    request.send(formData);
   });
+*/
+
 }
 
 
@@ -524,98 +631,6 @@ function download_anim()
   saveAs(anim_blob, filename);
 
 }
-
-
-
-// global detection if mousebutton is pressed.. ugly but works
-// TODO: nicer editor
-var down = false;
-$(document).mousedown(function() {
-    down = true;
-}).mouseup(function() {
-    down = false;
-});
-
-
-
-
-
-// for anim maker
-function change_color_mouseover(target)
-{
-if(down)
-{
-  color=$(target).css("background-color");
-  var rgb = color.match(/\d+/g);
-
-  if(rgb[0]==0 && rgb[1]==0 && rgb[2]==0 )
-  {
-    $(target).css("background-color",$("#color").css("background-color"));
-  }
-  else
-  {
-   $(target).css("background-color","#000000");
-  }
-}
-
-build_anim_data();
-
-}
-
-// for animmaker
-function change_color_onclick(target)
-{
-
-    color=$(target).css("background-color");
-    var rgb = color.match(/\d+/g);
-
-    if(rgb[0]==0 && rgb[1]==0 && rgb[2]==0 )
-    {
-      $(target).css("background-color",$("#color").css("background-color"));
-    }
-    else
-    {
-     $(target).css("background-color","#000000");
-    }
-
-
-    build_anim_data();
-
-}
-
-
-
-
-// adds columns to the editor
-var colcount=1;
-function addcolumn()
-{
-
- for(i =0;i<25;i++)
- {
-
-  var id="row_"+i+"_col_"+colcount;
-  $( "<td class=\"col_"+colcount+"\" id=\""+id+"\"></td>").appendTo( "#row" + i );
-
-   $("#"+id).mouseover(function(){
-    change_color_mouseover(event.target);
-   });
-
-   $("#"+id).click(function(){
-    change_color_onclick(event.target);
-   });
- }
- colcount+=1;
-
- build_anim_data();
-
-}
-
-
-
-
-
-
 
 
 
@@ -750,11 +765,11 @@ function exportBytes() {
   // console.log("export", canvas.height, canvas.width)
 
   var exportBytesRGBA = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  // console.log("canvas byte array:", exportBytesRGBA.length, exportBytesRGBA);
+   console.log("canvas byte array:", exportBytesRGBA.length, exportBytesRGBA);
 
   // convert canvas rgba array to our rgb (just strip every 4th item)
   var exportBytesRGB = exportBytesRGBA.filter(function(_, i) { return (i + 1) % 4 })
-  // console.log("export byte array:", exportBytesRGB.length, exportBytesRGB);
+  console.log("export byte array:", exportBytesRGB.length, exportBytesRGB);
 
 
   var a_size= 3*25*canvas.width;
@@ -768,7 +783,7 @@ function exportBytes() {
 
   index_counter=0;
   for (var col=0; col<canvas.width; col++) {
-      for (var row=24; row>=0; row--) {
+      for (var row=0; row<25; row++) {
 
         anim_content[index_counter] =     exportBytesRGB[(col + row * canvas.width) * 3];
         anim_content[index_counter + 1] = exportBytesRGB[(col + row * canvas.width) * 3 + 1];
@@ -777,7 +792,7 @@ function exportBytes() {
 
       }
   }
-  //console.log("column-wise export bytes:", anim_content.length, anim_content);
+  console.log("column-wise export bytes:", anim_content.length, anim_content);
 }
 
 
@@ -790,9 +805,30 @@ function exportBytes() {
 
 
 
+function show_error(message){
+     
+    $("#errors div.msg_content").html(message);
+    $("#errors").fadeIn(200,function(){
+      setTimeout(function(){$("#errors").fadeOut(500);},1000);
+    });
+    
+
+
+}
 
 
 
+
+function show_success(message){
+     
+  $("#success_messages div.msg_content").html(message);
+  $("#success_messages").fadeIn(200,function(){
+    setTimeout(function(){$("#success_messages").fadeOut(500);},1000);
+  });
+  
+
+
+}
 
 
 
@@ -842,6 +878,7 @@ $().ready(function() {
     $( "#targetrefreshbutton").click (function (event) {
       target=$("#targethost").val();
       load_animations(target);
+      
     });
 
 
@@ -874,17 +911,6 @@ $().ready(function() {
     download_anim();
    });
 
-   $( "#addcolumn").click (function (event) {
-     addcolumn();
-    });
-
-   $(".col_0").mouseover(function(){
-     change_color_mouseover(event.target);
-   });
-
-   $(".col_0").click(function(){
-    change_color_onclick(event.target);
-   });
 
    // nav menu
 
@@ -899,6 +925,8 @@ $().ready(function() {
    });
 
 
+   $("#success_messages").hide();
+   $("#errors").hide();
 
 
 });

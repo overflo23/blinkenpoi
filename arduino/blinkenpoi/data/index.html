@@ -38,9 +38,9 @@ There is more todo in blinkenpoi.js  ;)
 <body>
     <center>
 
-        <div id="errors">something fishy happened</div>
-        <div id="messages">oy mate! there is a message in here</div>
-
+        <div id="errors"><div class="msg_content">error inhalt</div></div>
+        <div id="success_messages"><div class="msg_content">msg inhalt</div></div>
+    
         <header class="section">
           <div class="circle-animation-container">
             <div class="circle-multiple">
@@ -187,7 +187,7 @@ There is more todo in blinkenpoi.js  ;)
                    <div id="loading-text">SCANNING..</div>
                  </div>
               </div>
-              <div class="section">
+              <div class="section" id="pois_list">
                 <h4>Connected Pois</h4>
                 <ul id="target_list">
                   <li class="list-header row">
@@ -199,7 +199,7 @@ There is more todo in blinkenpoi.js  ;)
                   </li>
                 </ul>
               </div>
-              <div class="section">
+              <div class="section" id="animations_list">
                 <h4>Play Animations on selected pois</h4>
                 <div id="animationlist"></div>
               </div>
@@ -229,8 +229,8 @@ There is more todo in blinkenpoi.js  ;)
                    <div class="name-label">Name: </div>
                    <input type="text" name="filename" id="filename" value="animation" />  
                    <input class="button download_anim" type="button" value="Download Animation" name="Download Animation">
-                   <input class="button transmit_anim" type="button"  value="Send Data to poi" >
-                   <input class="button mass_transmit_anim" type="button"  value="Send Data to ALL active pois" >
+                   <input class="button transmit_anim" type="button"  value="Send Data to Blinkenpoi" >
+                   <input class="button mass_transmit_anim" type="button"  value="Send Data to ALL active Blinkenpois" >
                   </div>
                  </div>
               </div>
